@@ -114,7 +114,7 @@ function CountryPage() {
             <p className="mt-3 text-balance-ar text-sm text-muted-foreground">{c.overview}</p>
           </section>
 
-          <Block title="لماذا تزور {}؟".replace("{}", c.ar)}>
+          <Block title={`لماذا تزور ${c.ar}؟`}>
             {c.attractions.join("، ")} — إضافة إلى تجربة الحياة اليومية والمطبخ المحلي والتنقل بين
             المدن.
           </Block>
