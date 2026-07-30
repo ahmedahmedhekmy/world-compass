@@ -27,6 +27,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GuidesIndexRouteImport } from './routes/guides.index'
 import { Route as CountriesIndexRouteImport } from './routes/countries.index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as LibrarySlugRouteImport } from './routes/library.$slug'
 import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
 import { Route as CountriesSlugRouteImport } from './routes/countries.$slug'
@@ -122,6 +123,11 @@ const CountriesIndexRoute = CountriesIndexRouteImport.update({
   path: '/countries/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const LibrarySlugRoute = LibrarySlugRouteImport.update({
   id: '/library/$slug',
   path: '/library/$slug',
@@ -147,7 +153,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
   '/calculator': typeof CalculatorRoute
   '/checkout': typeof CheckoutRoute
@@ -164,6 +170,7 @@ export interface FileRoutesByFullPath {
   '/countries/$slug': typeof CountriesSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/library/$slug': typeof LibrarySlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/countries/': typeof CountriesIndexRoute
   '/guides/': typeof GuidesIndexRoute
 }
@@ -171,7 +178,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
-  '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/calculator': typeof CalculatorRoute
   '/checkout': typeof CheckoutRoute
@@ -188,6 +194,7 @@ export interface FileRoutesByTo {
   '/countries/$slug': typeof CountriesSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/library/$slug': typeof LibrarySlugRoute
+  '/admin': typeof AdminIndexRoute
   '/countries': typeof CountriesIndexRoute
   '/guides': typeof GuidesIndexRoute
 }
@@ -196,7 +203,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/account': typeof AccountRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
   '/calculator': typeof CalculatorRoute
   '/checkout': typeof CheckoutRoute
@@ -213,6 +220,7 @@ export interface FileRoutesById {
   '/countries/$slug': typeof CountriesSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/library/$slug': typeof LibrarySlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/countries/': typeof CountriesIndexRoute
   '/guides/': typeof GuidesIndexRoute
 }
@@ -239,6 +247,7 @@ export interface FileRouteTypes {
     | '/countries/$slug'
     | '/guides/$slug'
     | '/library/$slug'
+    | '/admin/'
     | '/countries/'
     | '/guides/'
   fileRoutesByTo: FileRoutesByTo
@@ -246,7 +255,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/account'
-    | '/admin'
     | '/auth'
     | '/calculator'
     | '/checkout'
@@ -263,6 +271,7 @@ export interface FileRouteTypes {
     | '/countries/$slug'
     | '/guides/$slug'
     | '/library/$slug'
+    | '/admin'
     | '/countries'
     | '/guides'
   id:
@@ -287,6 +296,7 @@ export interface FileRouteTypes {
     | '/countries/$slug'
     | '/guides/$slug'
     | '/library/$slug'
+    | '/admin/'
     | '/countries/'
     | '/guides/'
   fileRoutesById: FileRoutesById
@@ -295,7 +305,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AccountRoute: typeof AccountRoute
-  AdminRoute: typeof AdminRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AuthRoute: typeof AuthRoute
   CalculatorRoute: typeof CalculatorRoute
   CheckoutRoute: typeof CheckoutRoute
@@ -444,6 +454,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CountriesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/library/$slug': {
       id: '/library/$slug'
       path: '/library/$slug'
@@ -475,11 +492,21 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminRouteChildren {
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AccountRoute: AccountRoute,
-  AdminRoute: AdminRoute,
+  AdminRoute: AdminRouteWithChildren,
   AuthRoute: AuthRoute,
   CalculatorRoute: CalculatorRoute,
   CheckoutRoute: CheckoutRoute,
