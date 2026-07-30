@@ -13,6 +13,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PlanRouteImport } from './routes/plan'
+import { Route as OffersRouteImport } from './routes/offers'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -47,6 +48,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const PlanRoute = PlanRouteImport.update({
   id: '/plan',
   path: '/plan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OffersRoute = OffersRouteImport.update({
+  id: '/offers',
+  path: '/offers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ExploreRoute = ExploreRouteImport.update({
@@ -135,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/disclaimer': typeof DisclaimerRoute
   '/explore': typeof ExploreRoute
+  '/offers': typeof OffersRoute
   '/plan': typeof PlanRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -156,6 +163,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/disclaimer': typeof DisclaimerRoute
   '/explore': typeof ExploreRoute
+  '/offers': typeof OffersRoute
   '/plan': typeof PlanRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -178,6 +186,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/disclaimer': typeof DisclaimerRoute
   '/explore': typeof ExploreRoute
+  '/offers': typeof OffersRoute
   '/plan': typeof PlanRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -201,6 +210,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/disclaimer'
     | '/explore'
+    | '/offers'
     | '/plan'
     | '/privacy'
     | '/sitemap.xml'
@@ -222,6 +232,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/disclaimer'
     | '/explore'
+    | '/offers'
     | '/plan'
     | '/privacy'
     | '/sitemap.xml'
@@ -243,6 +254,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/disclaimer'
     | '/explore'
+    | '/offers'
     | '/plan'
     | '/privacy'
     | '/sitemap.xml'
@@ -265,6 +277,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   DisclaimerRoute: typeof DisclaimerRoute
   ExploreRoute: typeof ExploreRoute
+  OffersRoute: typeof OffersRoute
   PlanRoute: typeof PlanRoute
   PrivacyRoute: typeof PrivacyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -305,6 +318,13 @@ declare module '@tanstack/react-router' {
       path: '/plan'
       fullPath: '/plan'
       preLoaderRoute: typeof PlanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/offers': {
+      id: '/offers'
+      path: '/offers'
+      fullPath: '/offers'
+      preLoaderRoute: typeof OffersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/explore': {
@@ -425,6 +445,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   DisclaimerRoute: DisclaimerRoute,
   ExploreRoute: ExploreRoute,
+  OffersRoute: OffersRoute,
   PlanRoute: PlanRoute,
   PrivacyRoute: PrivacyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
