@@ -9,6 +9,7 @@ const groups = [
       { to: "/countries", label: "الدول" },
       { to: "/explore", label: "القارات" },
       { to: "/guides", label: "أدلة السفر" },
+      { to: "/offers", label: "عروض الأسبوع" },
     ],
   },
   {
@@ -31,6 +32,7 @@ const groups = [
       { to: "/privacy", label: "سياسة الخصوصية" },
       { to: "/terms", label: "شروط الخدمة" },
       { to: "/disclaimer", label: "إخلاء مسؤولية السفر" },
+      { to: "/refund", label: "سياسة الاسترجاع" },
     ],
   },
 ] as const;

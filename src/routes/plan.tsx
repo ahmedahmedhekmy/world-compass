@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { site, formatUSD } from "@/config/site";
+import { useSiteSettings } from "@/lib/site-settings";
 
 export const Route = createFileRoute("/plan")({
   head: () => ({
@@ -19,6 +20,7 @@ export const Route = createFileRoute("/plan")({
 });
 
 function PlanPage() {
+  const { pricing } = useSiteSettings();
   return (
     <>
       <section className="surface-deep py-16">
@@ -74,8 +76,10 @@ function PlanPage() {
 
         <aside className="h-fit rounded-3xl border border-border p-6 lg:sticky lg:top-24">
           <p className="text-sm text-muted-foreground">رسوم الخدمة</p>
-          <p className="mt-1 text-4xl font-black">{formatUSD(site.planningServicePriceUSD)}</p>
-          <p className="mt-2 text-xs text-muted-foreground">قابلة للتعديل من لوحة تحكم المالك.</p>
+          <p className="mt-1 text-4xl font-black">{formatUSD(pricing.planningStartFeeUSD)}</p>
+          <p className="mt-2 text-xs text-muted-foreground">
+            رسوم بدء تُدفع مرة واحدة، وتشمل إعداد خطتك المخصصة ومراجعتها معك.
+          </p>
           <Button asChild variant="hero" size="lg" className="mt-5 w-full">
             <Link to="/checkout" search={{ product: "planning" }}>
               اطلب الخدمة
