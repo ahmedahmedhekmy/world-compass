@@ -24,6 +24,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GuidesIndexRouteImport } from './routes/guides.index'
 import { Route as CountriesIndexRouteImport } from './routes/countries.index'
+import { Route as LibrarySlugRouteImport } from './routes/library.$slug'
 import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
 import { Route as CountriesSlugRouteImport } from './routes/countries.$slug'
 import { Route as ContinentsSlugRouteImport } from './routes/continents.$slug'
@@ -103,6 +104,11 @@ const CountriesIndexRoute = CountriesIndexRouteImport.update({
   path: '/countries/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LibrarySlugRoute = LibrarySlugRouteImport.update({
+  id: '/library/$slug',
+  path: '/library/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GuidesSlugRoute = GuidesSlugRouteImport.update({
   id: '/guides/$slug',
   path: '/guides/$slug',
@@ -136,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/continents/$slug': typeof ContinentsSlugRoute
   '/countries/$slug': typeof CountriesSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
+  '/library/$slug': typeof LibrarySlugRoute
   '/countries/': typeof CountriesIndexRoute
   '/guides/': typeof GuidesIndexRoute
 }
@@ -156,6 +163,7 @@ export interface FileRoutesByTo {
   '/continents/$slug': typeof ContinentsSlugRoute
   '/countries/$slug': typeof CountriesSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
+  '/library/$slug': typeof LibrarySlugRoute
   '/countries': typeof CountriesIndexRoute
   '/guides': typeof GuidesIndexRoute
 }
@@ -177,6 +185,7 @@ export interface FileRoutesById {
   '/continents/$slug': typeof ContinentsSlugRoute
   '/countries/$slug': typeof CountriesSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
+  '/library/$slug': typeof LibrarySlugRoute
   '/countries/': typeof CountriesIndexRoute
   '/guides/': typeof GuidesIndexRoute
 }
@@ -199,6 +208,7 @@ export interface FileRouteTypes {
     | '/continents/$slug'
     | '/countries/$slug'
     | '/guides/$slug'
+    | '/library/$slug'
     | '/countries/'
     | '/guides/'
   fileRoutesByTo: FileRoutesByTo
@@ -219,6 +229,7 @@ export interface FileRouteTypes {
     | '/continents/$slug'
     | '/countries/$slug'
     | '/guides/$slug'
+    | '/library/$slug'
     | '/countries'
     | '/guides'
   id:
@@ -239,6 +250,7 @@ export interface FileRouteTypes {
     | '/continents/$slug'
     | '/countries/$slug'
     | '/guides/$slug'
+    | '/library/$slug'
     | '/countries/'
     | '/guides/'
   fileRoutesById: FileRoutesById
@@ -260,6 +272,7 @@ export interface RootRouteChildren {
   ContinentsSlugRoute: typeof ContinentsSlugRoute
   CountriesSlugRoute: typeof CountriesSlugRoute
   GuidesSlugRoute: typeof GuidesSlugRoute
+  LibrarySlugRoute: typeof LibrarySlugRoute
   CountriesIndexRoute: typeof CountriesIndexRoute
   GuidesIndexRoute: typeof GuidesIndexRoute
 }
@@ -371,6 +384,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CountriesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/library/$slug': {
+      id: '/library/$slug'
+      path: '/library/$slug'
+      fullPath: '/library/$slug'
+      preLoaderRoute: typeof LibrarySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/guides/$slug': {
       id: '/guides/$slug'
       path: '/guides/$slug'
@@ -412,6 +432,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContinentsSlugRoute: ContinentsSlugRoute,
   CountriesSlugRoute: CountriesSlugRoute,
   GuidesSlugRoute: GuidesSlugRoute,
+  LibrarySlugRoute: LibrarySlugRoute,
   CountriesIndexRoute: CountriesIndexRoute,
   GuidesIndexRoute: GuidesIndexRoute,
 }
