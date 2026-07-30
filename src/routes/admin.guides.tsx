@@ -46,7 +46,10 @@ function AdminGuides() {
   }
 
   async function save(id: string, patch: Record<string, unknown>) {
-    const { error } = await supabase.from("guides").update(patch).eq("id", id);
+    const { error } = await supabase
+      .from("guides")
+      .update(patch as never)
+      .eq("id", id);
     if (error) return toast.error("تعذّر الحفظ");
     toast.success("تم الحفظ");
     qc.invalidateQueries({ queryKey: ["admin-guides"] });
