@@ -32,6 +32,7 @@ import { Route as LibrarySlugRouteImport } from './routes/library.$slug'
 import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
 import { Route as CountriesSlugRouteImport } from './routes/countries.$slug'
 import { Route as ContinentsSlugRouteImport } from './routes/continents.$slug'
+import { Route as AdminRequestsRouteImport } from './routes/admin.requests'
 import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 
 const TermsRoute = TermsRouteImport.update({
@@ -149,6 +150,11 @@ const ContinentsSlugRoute = ContinentsSlugRouteImport.update({
   path: '/continents/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRequestsRoute = AdminRequestsRouteImport.update({
+  id: '/requests',
+  path: '/requests',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminOrdersRoute = AdminOrdersRouteImport.update({
   id: '/orders',
   path: '/orders',
@@ -173,6 +179,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/admin/orders': typeof AdminOrdersRoute
+  '/admin/requests': typeof AdminRequestsRoute
   '/continents/$slug': typeof ContinentsSlugRoute
   '/countries/$slug': typeof CountriesSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
@@ -198,6 +205,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/admin/orders': typeof AdminOrdersRoute
+  '/admin/requests': typeof AdminRequestsRoute
   '/continents/$slug': typeof ContinentsSlugRoute
   '/countries/$slug': typeof CountriesSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
@@ -225,6 +233,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/admin/orders': typeof AdminOrdersRoute
+  '/admin/requests': typeof AdminRequestsRoute
   '/continents/$slug': typeof ContinentsSlugRoute
   '/countries/$slug': typeof CountriesSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
@@ -253,6 +262,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/terms'
     | '/admin/orders'
+    | '/admin/requests'
     | '/continents/$slug'
     | '/countries/$slug'
     | '/guides/$slug'
@@ -278,6 +288,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/terms'
     | '/admin/orders'
+    | '/admin/requests'
     | '/continents/$slug'
     | '/countries/$slug'
     | '/guides/$slug'
@@ -304,6 +315,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/terms'
     | '/admin/orders'
+    | '/admin/requests'
     | '/continents/$slug'
     | '/countries/$slug'
     | '/guides/$slug'
@@ -501,6 +513,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContinentsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/requests': {
+      id: '/admin/requests'
+      path: '/requests'
+      fullPath: '/admin/requests'
+      preLoaderRoute: typeof AdminRequestsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/orders': {
       id: '/admin/orders'
       path: '/orders'
@@ -513,11 +532,13 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminOrdersRoute: typeof AdminOrdersRoute
+  AdminRequestsRoute: typeof AdminRequestsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminOrdersRoute: AdminOrdersRoute,
+  AdminRequestsRoute: AdminRequestsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
