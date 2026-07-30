@@ -9,6 +9,7 @@ const nav = [
   { to: "/explore", label: "استكشف العالم" },
   { to: "/countries", label: "الدول" },
   { to: "/guides", label: "أدلة السفر" },
+  { to: "/offers", label: "عروض الأسبوع" },
   { to: "/calculator", label: "احسب تكلفة رحلتك" },
   { to: "/plan", label: "خطط رحلتك" },
   { to: "/about", label: "من نحن" },

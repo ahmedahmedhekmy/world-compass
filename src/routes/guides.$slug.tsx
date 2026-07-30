@@ -3,6 +3,7 @@ import { Check, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { continentImage, countryBySlug } from "@/data/countries";
 import { site, formatUSD } from "@/config/site";
+import { useSiteSettings } from "@/lib/site-settings";
 
 /** Chapter titles only — the paid body content is never shipped to the client. */
 const CHAPTERS = [
@@ -67,6 +68,7 @@ export const Route = createFileRoute("/guides/$slug")({
 
 function GuidePage() {
   const { country: c } = Route.useLoaderData();
+  const { pricing } = useSiteSettings();
 
   return (
     <>
@@ -134,7 +136,7 @@ function GuidePage() {
 
         <aside className="h-fit rounded-3xl border border-border p-6 lg:sticky lg:top-24">
           <p className="text-sm text-muted-foreground">سعر الدليل</p>
-          <p className="mt-1 text-4xl font-black">{formatUSD(site.guidePriceUSD)}</p>
+          <p className="mt-1 text-4xl font-black">{formatUSD(pricing.guidePriceUSD)}</p>
           <p className="mt-2 text-xs text-muted-foreground">
             دفعة واحدة · وصول دائم للنسخة المحدّثة من الدليل.
           </p>
