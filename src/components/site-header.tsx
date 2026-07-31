@@ -1,26 +1,27 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, X, Globe, Compass } from "lucide-react";
+import { Menu, X, Globe, Compass, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useLang, type Lang } from "@/lib/i18n";
+import { useAuth } from "@/hooks/useAuth";
 
 const nav = [
-  { to: "/", label: "الرئيسية" },
-  { to: "/explore", label: "استكشف العالم" },
-  { to: "/countries", label: "الدول" },
-  { to: "/guides", label: "أدلة السفر" },
-  { to: "/offers", label: "عروض الأسبوع" },
-  { to: "/calculator", label: "احسب تكلفة رحلتك" },
-  { to: "/plan", label: "خطط رحلتك" },
-  { to: "/about", label: "من نحن" },
-  { to: "/contact", label: "تواصل معنا" },
+  { to: "/", key: "nav.home" },
+  { to: "/explore", key: "nav.explore" },
+  { to: "/countries", key: "nav.countries" },
+  { to: "/guides", key: "nav.guides" },
+  { to: "/offers", key: "nav.offers" },
+  { to: "/calculator", key: "nav.calculator" },
+  { to: "/plan", key: "nav.plan" },
+  { to: "/about", key: "nav.about" },
+  { to: "/contact", key: "nav.contact" },
 ] as const;
-
-const languages = ["العربية", "English", "Français", "Español", "Deutsch"];
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const [lang, setLang] = useState("العربية");
+  const { lang, setLang, t } = useLang();
+  const { user } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/85 backdrop-blur-xl">
@@ -44,7 +45,7 @@ export function SiteHeader() {
               activeProps={{ className: "bg-secondary text-foreground font-semibold" }}
               activeOptions={{ exact: item.to === "/" }}
             >
-              {item.label}
+              {t(item.key)}
             </Link>
           ))}
         </nav>
@@ -52,24 +53,31 @@ export function SiteHeader() {
         <div className="flex shrink-0 items-center gap-2">
           <label className="hidden items-center gap-1 rounded-full border border-border px-2 py-1.5 text-xs sm:flex">
             <Globe className="size-3.5 text-muted-foreground" />
-            <span className="sr-only">اختر اللغة</span>
+            <span className="sr-only">{t("lang.label")}</span>
             <select
               value={lang}
-              onChange={(e) => setLang(e.target.value)}
+              onChange={(e) => setLang(e.target.value as Lang)}
               className="bg-transparent text-xs outline-none"
             >
-              {languages.map((l) => (
-                <option key={l}>{l}</option>
-              ))}
+              <option value="ar">العربية</option>
+              <option value="en">English</option>
             </select>
           </label>
+
+          <Button asChild size="sm" variant="ghost" className="hidden sm:inline-flex">
+            <Link to={user ? "/account" : "/auth"} aria-label={t("nav.account")}>
+              <UserRound className="size-4" />
+              <span className="hidden md:inline">{t("nav.account")}</span>
+            </Link>
+          </Button>
+
           <Button asChild size="sm" variant="hero" className="hidden sm:inline-flex">
-            <Link to="/calculator">احسب ميزانيتك</Link>
+            <Link to="/calculator">{t("cta.budget")}</Link>
           </Button>
           <button
             className="grid size-10 place-items-center rounded-xl border border-border lg:hidden"
             onClick={() => setOpen((v) => !v)}
-            aria-label="القائمة"
+            aria-label={t("menu.label")}
             aria-expanded={open}
           >
             {open ? <X className="size-5" /> : <Menu className="size-5" />}
@@ -88,12 +96,19 @@ export function SiteHeader() {
               activeProps={{ className: "bg-secondary" }}
               activeOptions={{ exact: item.to === "/" }}
             >
-              {item.label}
+              {t(item.key)}
             </Link>
           ))}
+          <Link
+            to={user ? "/account" : "/auth"}
+            onClick={() => setOpen(false)}
+            className="rounded-xl px-3 py-3 text-sm font-medium hover:bg-secondary"
+          >
+            {t("nav.account")}
+          </Link>
           <Button asChild variant="hero" className="mt-2">
             <Link to="/calculator" onClick={() => setOpen(false)}>
-              احسب تكلفة رحلتي
+              {t("cta.budget")}
             </Link>
           </Button>
         </nav>
