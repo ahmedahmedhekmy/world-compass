@@ -411,6 +411,9 @@ function Home() {
           </Accordion>
         </div>
       </section>
+
+      <TrustAndNewsletter />
     </>
+
   );
 }
