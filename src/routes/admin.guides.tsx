@@ -123,6 +123,8 @@ function AdminGuides() {
                         price_usd: Number(fd.get("price")) || null,
                         pdf_url: String(fd.get("pdf_url") ?? "") || null,
                         summary: String(fd.get("summary") ?? "") || null,
+                        preview_text: String(fd.get("preview_text") ?? "") || null,
+                        last_updated: String(fd.get("last_updated") ?? "") || g.last_updated,
                       });
                     } catch {
                       toast.error("صيغة الفصول غير صحيحة (JSON)");
@@ -131,10 +133,38 @@ function AdminGuides() {
                 >
                   <Label htmlFor={`summary-${g.id}`}>ملخص الدليل</Label>
                   <Input id={`summary-${g.id}`} name="summary" defaultValue={g.summary ?? ""} />
+                  <Label htmlFor={`preview-${g.id}`}>نص المعاينة المجانية</Label>
+                  <Textarea
+                    id={`preview-${g.id}`}
+                    name="preview_text"
+                    rows={4}
+                    defaultValue={(g as { preview_text?: string | null }).preview_text ?? ""}
+                  />
                   <Label htmlFor={`price-${g.id}`}>السعر (USD)</Label>
                   <Input id={`price-${g.id}`} name="price" type="number" defaultValue={g.price_usd ?? ""} />
-                  <Label htmlFor={`pdf-${g.id}`}>رابط ملف PDF</Label>
+                  <Label htmlFor={`updated-${g.id}`}>تاريخ آخر تحديث</Label>
+                  <Input
+                    id={`updated-${g.id}`}
+                    name="last_updated"
+                    type="date"
+                    defaultValue={g.last_updated ?? ""}
+                  />
+                  <Label htmlFor={`pdf-${g.id}`}>ملف PDF (مسار داخلي أو رابط)</Label>
                   <Input id={`pdf-${g.id}`} name="pdf_url" defaultValue={g.pdf_url ?? ""} />
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="file"
+                      accept="application/pdf"
+                      className="text-xs"
+                      disabled={uploading === g.id}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) void uploadPdf(g.id, g.country_slug, file);
+                      }}
+                    />
+                    {uploading === g.id && <span className="text-xs">جارٍ الرفع…</span>}
+                  </div>
+
                   <Label htmlFor={`sections-${g.id}`}>
                     الفصول (JSON: [{"{"}"title":"...","body":"..."{"}"}])
                   </Label>
