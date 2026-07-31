@@ -19,12 +19,17 @@ export const Route = createFileRoute("/admin")({
 
 const NAV = [
   { to: "/admin", label: "نظرة عامة", exact: true },
+  { to: "/admin/analytics", label: "التحليلات" },
   { to: "/admin/orders", label: "الطلبات" },
+  { to: "/admin/customers", label: "العملاء" },
   { to: "/admin/requests", label: "طلبات التخطيط والحجز" },
   { to: "/admin/offers", label: "العروض" },
+  { to: "/admin/countries", label: "الدول" },
   { to: "/admin/guides", label: "الأدلة" },
+  { to: "/admin/media", label: "الوسائط" },
   { to: "/admin/settings", label: "الأسعار والإعدادات" },
 ] as const;
+
 
 function AdminLayout() {
   const { user, isAdmin, loading } = useAuth();
