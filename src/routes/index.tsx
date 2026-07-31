@@ -41,9 +41,29 @@ export const Route = createFileRoute("/")({
         content: "اكتشف أين تذهب، وكم تحتاج، وكيف تستعد لرحلتك.",
       },
     ],
+    links: [{ rel: "canonical", href: "/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: [
+            ["هل الأسعار التي تظهر نهائية؟", "لا، جميع الأرقام تقديرية وقد تختلف حسب تاريخ السفر والتوافر."],
+            ["ما الفرق بين المعلومات المجانية والدليل المدفوع؟", "المعلومات المجانية مقدمة عن الدولة، والدليل المدفوع مرجع عملي كامل للتحضير."],
+            ["هل تضمنون الحصول على التأشيرة؟", "لا، نقدم معلومات وإرشادات فقط والقرار للجهات الرسمية."],
+          ].map(([q, a]) => ({
+            "@type": "Question",
+            name: q,
+            acceptedAnswer: { "@type": "Answer", text: a },
+          })),
+        }),
+      },
+    ],
   }),
   component: Home,
 });
+
 
 function SectionHead({
   eyebrow,
