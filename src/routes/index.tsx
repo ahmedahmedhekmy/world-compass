@@ -356,7 +356,12 @@ function Home() {
         </div>
       </section>
 
+      <HomeOffers />
+
+      <InspirationGallery />
+
       {/* 10 — How it works */}
+
       <section className="container-page py-20">
         <SectionHead title="كيف تعمل المنصة؟" />
         <ol className="mt-10 grid gap-4 md:grid-cols-5">
