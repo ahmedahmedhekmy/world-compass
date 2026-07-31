@@ -21,6 +21,22 @@ interface Section {
 function AdminGuides() {
   const qc = useQueryClient();
   const [editing, setEditing] = useState<string | null>(null);
+  const [uploading, setUploading] = useState<string | null>(null);
+
+  async function uploadPdf(id: string, slug: string, file: File) {
+    setUploading(id);
+    const path = `${slug}/${Date.now()}-${file.name.replace(/[^\w.-]/g, "_")}`;
+    const { error } = await supabase.storage.from("guides").upload(path, file, {
+      contentType: "application/pdf",
+      upsert: true,
+    });
+    setUploading(null);
+    if (error) return toast.error("تعذّر رفع الملف");
+    await supabase.from("guides").update({ pdf_url: path } as never).eq("id", id);
+    toast.success("تم رفع ملف الدليل");
+    qc.invalidateQueries({ queryKey: ["admin-guides"] });
+  }
+
 
   const { data: guides } = useQuery({
     queryKey: ["admin-guides"],
