@@ -18,9 +18,13 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { CountryCard } from "@/components/country-card";
+import { HomeOffers } from "@/components/home-offers";
+import { InspirationGallery } from "@/components/inspiration-gallery";
+import { TrustAndNewsletter } from "@/components/trust-newsletter";
 import { continents, popularCountries, countries } from "@/data/countries";
 import { site, formatUSD } from "@/config/site";
 import { DISCLAIMER_SCOPE } from "@/lib/estimator";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
