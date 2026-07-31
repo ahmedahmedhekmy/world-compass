@@ -136,8 +136,24 @@ export const createOrder = createServerFn({ method: "POST" })
       1000 + Math.random() * 9000,
     )}`;
 
+    // Attach the buyer's account when the request carries a valid session, so the
+    // purchased guide unlocks in their library.
+    let userId: string | null = null;
+    try {
+      const { getRequest } = await import("@tanstack/react-start/server");
+      const authHeader = getRequest().headers.get("authorization") ?? "";
+      const token = authHeader.toLowerCase().startsWith("bearer ") ? authHeader.slice(7) : "";
+      if (token) {
+        const { data: userData } = await supabaseAdmin.auth.getUser(token);
+        userId = userData.user?.id ?? null;
+      }
+    } catch {
+      userId = null;
+    }
+
     const { error } = await supabaseAdmin.from("orders").insert({
       reference,
+      user_id: userId,
       email: data.email,
       full_name: data.full_name,
       product_type: data.product_type,
@@ -147,6 +163,7 @@ export const createOrder = createServerFn({ method: "POST" })
       admin_notes: data.notes ?? null,
     } as never);
     if (error) throw new Error("تعذّر إنشاء الطلب، حاول مرة أخرى.");
+
 
     await sendAdminEmail("طلب شراء جديد", [
       ["رقم الطلب", reference],

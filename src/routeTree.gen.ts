@@ -36,7 +36,11 @@ import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminRequestsRouteImport } from './routes/admin.requests'
 import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 import { Route as AdminOffersRouteImport } from './routes/admin.offers'
+import { Route as AdminMediaRouteImport } from './routes/admin.media'
 import { Route as AdminGuidesRouteImport } from './routes/admin.guides'
+import { Route as AdminCustomersRouteImport } from './routes/admin.customers'
+import { Route as AdminCountriesRouteImport } from './routes/admin.countries'
+import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -173,9 +177,29 @@ const AdminOffersRoute = AdminOffersRouteImport.update({
   path: '/offers',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminMediaRoute = AdminMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminGuidesRoute = AdminGuidesRouteImport.update({
   id: '/guides',
   path: '/guides',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCustomersRoute = AdminCustomersRouteImport.update({
+  id: '/customers',
+  path: '/customers',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCountriesRoute = AdminCountriesRouteImport.update({
+  id: '/countries',
+  path: '/countries',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -196,7 +220,11 @@ export interface FileRoutesByFullPath {
   '/refund': typeof RefundRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/countries': typeof AdminCountriesRoute
+  '/admin/customers': typeof AdminCustomersRoute
   '/admin/guides': typeof AdminGuidesRoute
+  '/admin/media': typeof AdminMediaRoute
   '/admin/offers': typeof AdminOffersRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/requests': typeof AdminRequestsRoute
@@ -225,7 +253,11 @@ export interface FileRoutesByTo {
   '/refund': typeof RefundRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/countries': typeof AdminCountriesRoute
+  '/admin/customers': typeof AdminCustomersRoute
   '/admin/guides': typeof AdminGuidesRoute
+  '/admin/media': typeof AdminMediaRoute
   '/admin/offers': typeof AdminOffersRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/requests': typeof AdminRequestsRoute
@@ -256,7 +288,11 @@ export interface FileRoutesById {
   '/refund': typeof RefundRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/countries': typeof AdminCountriesRoute
+  '/admin/customers': typeof AdminCustomersRoute
   '/admin/guides': typeof AdminGuidesRoute
+  '/admin/media': typeof AdminMediaRoute
   '/admin/offers': typeof AdminOffersRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/requests': typeof AdminRequestsRoute
@@ -288,7 +324,11 @@ export interface FileRouteTypes {
     | '/refund'
     | '/sitemap.xml'
     | '/terms'
+    | '/admin/analytics'
+    | '/admin/countries'
+    | '/admin/customers'
     | '/admin/guides'
+    | '/admin/media'
     | '/admin/offers'
     | '/admin/orders'
     | '/admin/requests'
@@ -317,7 +357,11 @@ export interface FileRouteTypes {
     | '/refund'
     | '/sitemap.xml'
     | '/terms'
+    | '/admin/analytics'
+    | '/admin/countries'
+    | '/admin/customers'
     | '/admin/guides'
+    | '/admin/media'
     | '/admin/offers'
     | '/admin/orders'
     | '/admin/requests'
@@ -347,7 +391,11 @@ export interface FileRouteTypes {
     | '/refund'
     | '/sitemap.xml'
     | '/terms'
+    | '/admin/analytics'
+    | '/admin/countries'
+    | '/admin/customers'
     | '/admin/guides'
+    | '/admin/media'
     | '/admin/offers'
     | '/admin/orders'
     | '/admin/requests'
@@ -577,6 +625,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminOffersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/media': {
+      id: '/admin/media'
+      path: '/media'
+      fullPath: '/admin/media'
+      preLoaderRoute: typeof AdminMediaRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/guides': {
       id: '/admin/guides'
       path: '/guides'
@@ -584,11 +639,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminGuidesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/customers': {
+      id: '/admin/customers'
+      path: '/customers'
+      fullPath: '/admin/customers'
+      preLoaderRoute: typeof AdminCustomersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/countries': {
+      id: '/admin/countries'
+      path: '/countries'
+      fullPath: '/admin/countries'
+      preLoaderRoute: typeof AdminCountriesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/analytics': {
+      id: '/admin/analytics'
+      path: '/analytics'
+      fullPath: '/admin/analytics'
+      preLoaderRoute: typeof AdminAnalyticsRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminAnalyticsRoute: typeof AdminAnalyticsRoute
+  AdminCountriesRoute: typeof AdminCountriesRoute
+  AdminCustomersRoute: typeof AdminCustomersRoute
   AdminGuidesRoute: typeof AdminGuidesRoute
+  AdminMediaRoute: typeof AdminMediaRoute
   AdminOffersRoute: typeof AdminOffersRoute
   AdminOrdersRoute: typeof AdminOrdersRoute
   AdminRequestsRoute: typeof AdminRequestsRoute
@@ -597,7 +677,11 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAnalyticsRoute: AdminAnalyticsRoute,
+  AdminCountriesRoute: AdminCountriesRoute,
+  AdminCustomersRoute: AdminCustomersRoute,
   AdminGuidesRoute: AdminGuidesRoute,
+  AdminMediaRoute: AdminMediaRoute,
   AdminOffersRoute: AdminOffersRoute,
   AdminOrdersRoute: AdminOrdersRoute,
   AdminRequestsRoute: AdminRequestsRoute,

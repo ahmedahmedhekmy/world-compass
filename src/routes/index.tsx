@@ -18,9 +18,13 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { CountryCard } from "@/components/country-card";
+import { HomeOffers } from "@/components/home-offers";
+import { InspirationGallery } from "@/components/inspiration-gallery";
+import { TrustAndNewsletter } from "@/components/trust-newsletter";
 import { continents, popularCountries, countries } from "@/data/countries";
 import { site, formatUSD } from "@/config/site";
 import { DISCLAIMER_SCOPE } from "@/lib/estimator";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -37,9 +41,29 @@ export const Route = createFileRoute("/")({
         content: "اكتشف أين تذهب، وكم تحتاج، وكيف تستعد لرحلتك.",
       },
     ],
+    links: [{ rel: "canonical", href: "/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: [
+            ["هل الأسعار التي تظهر نهائية؟", "لا، جميع الأرقام تقديرية وقد تختلف حسب تاريخ السفر والتوافر."],
+            ["ما الفرق بين المعلومات المجانية والدليل المدفوع؟", "المعلومات المجانية مقدمة عن الدولة، والدليل المدفوع مرجع عملي كامل للتحضير."],
+            ["هل تضمنون الحصول على التأشيرة؟", "لا، نقدم معلومات وإرشادات فقط والقرار للجهات الرسمية."],
+          ].map(([q, a]) => ({
+            "@type": "Question",
+            name: q,
+            acceptedAnswer: { "@type": "Answer", text: a },
+          })),
+        }),
+      },
+    ],
   }),
   component: Home,
 });
+
 
 function SectionHead({
   eyebrow,
@@ -352,7 +376,12 @@ function Home() {
         </div>
       </section>
 
+      <HomeOffers />
+
+      <InspirationGallery />
+
       {/* 10 — How it works */}
+
       <section className="container-page py-20">
         <SectionHead title="كيف تعمل المنصة؟" />
         <ol className="mt-10 grid gap-4 md:grid-cols-5">
@@ -402,6 +431,9 @@ function Home() {
           </Accordion>
         </div>
       </section>
+
+      <TrustAndNewsletter />
     </>
+
   );
 }

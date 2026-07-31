@@ -1,8 +1,10 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useAuth } from "@/hooks/useAuth";
 import { countryBySlug } from "@/data/countries";
+import { getOwnedGuide } from "@/lib/guides.functions";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 
 export const Route = createFileRoute("/library/$slug")({
   head: ({ params }) => ({
@@ -17,51 +19,27 @@ export const Route = createFileRoute("/library/$slug")({
     ],
   }),
   component: LibraryGuide,
+  errorComponent: () => <div className="container-page py-24 text-center">تعذّر تحميل الدليل.</div>,
   notFoundComponent: () => <div className="container-page py-24 text-center">الدليل غير متاح.</div>,
 });
-
-interface Section {
-  title: string;
-  body: string;
-}
 
 function LibraryGuide() {
   const { slug } = Route.useParams();
   const { user, loading } = useAuth();
-  const [guide, setGuide] = useState<{ title: string; sections: Section[]; pdf_url: string | null } | null>(
-    null,
-  );
-  const [state, setState] = useState<"loading" | "denied" | "ready">("loading");
   const country = countryBySlug(slug);
+  const fetchGuide = useServerFn(getOwnedGuide);
 
-  useEffect(() => {
-    if (loading) return;
-    if (!user) {
-      setState("denied");
-      return;
-    }
-    supabase
-      .from("guides")
-      .select("title, sections, pdf_url")
-      .eq("country_slug", slug)
-      .maybeSingle()
-      .then(({ data }) => {
-        if (!data) {
-          setState("denied");
-          return;
-        }
-        setGuide({
-          title: data.title,
-          sections: (data.sections as unknown as Section[]) ?? [],
-          pdf_url: data.pdf_url,
-        });
-        setState("ready");
-      });
-  }, [slug, user, loading]);
+  const { data, isPending } = useQuery({
+    queryKey: ["owned-guide", slug, user?.id],
+    enabled: Boolean(user) && !loading,
+    queryFn: () => fetchGuide({ data: { slug } }),
+  });
 
-  if (state === "loading") return <div className="container-page py-24 text-center">جارٍ التحميل…</div>;
+  if (loading || (user && isPending)) {
+    return <div className="container-page py-24 text-center">جارٍ التحميل…</div>;
+  }
 
-  if (state === "denied") {
+  if (!user || !data?.owned) {
     return (
       <div className="container-page py-24 text-center">
         <h1 className="text-2xl font-bold">هذا الدليل غير مفعّل في حسابك</h1>
@@ -69,9 +47,11 @@ function LibraryGuide() {
           يظهر محتوى الدليل هنا بعد تأكيد عملية الشراء.
         </p>
         <div className="mt-5 flex justify-center gap-3">
-          <Link to="/auth" className="text-primary underline">
-            تسجيل الدخول
-          </Link>
+          {!user && (
+            <Link to="/auth" className="text-primary underline">
+              تسجيل الدخول
+            </Link>
+          )}
           <Link to="/guides" className="text-primary underline">
             كل الأدلة
           </Link>
@@ -82,25 +62,32 @@ function LibraryGuide() {
 
   return (
     <article className="container-page max-w-3xl py-16">
-      <h1 className="text-3xl font-black">{guide?.title ?? `دليل ${country?.ar ?? slug}`}</h1>
-      {guide?.pdf_url && (
-        <a className="mt-3 inline-block text-sm text-primary underline" href={guide.pdf_url}>
+      <Breadcrumbs items={[{ label: "مكتبتي", href: "/account" }, { label: country?.ar ?? slug }]} />
+      <h1 className="mt-4 text-3xl font-black">{data.title ?? `دليل ${country?.ar ?? slug}`}</h1>
+      {data.last_updated && (
+        <p className="mt-2 text-xs text-muted-foreground">آخر تحديث: {data.last_updated}</p>
+      )}
+      {data.pdf_url && (
+        <a
+          className="mt-3 inline-block text-sm text-primary underline"
+          href={data.pdf_url}
+          target="_blank"
+          rel="noreferrer"
+        >
           تحميل نسخة PDF
         </a>
       )}
       <div className="mt-8 grid gap-8">
-        {guide?.sections.map((s) => (
+        {data.sections.map((s) => (
           <section key={s.title}>
             <h2 className="text-xl font-extrabold">{s.title}</h2>
             <p className="mt-2 whitespace-pre-line text-sm leading-8 text-muted-foreground">{s.body}</p>
           </section>
         ))}
-        {guide?.sections.length === 0 && (
+        {data.sections.length === 0 && (
           <p className="text-sm text-muted-foreground">يجري تحديث محتوى هذا الدليل حاليًا.</p>
         )}
       </div>
     </article>
   );
 }
-
-export const notFoundGuide = notFound;

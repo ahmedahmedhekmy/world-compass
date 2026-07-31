@@ -201,6 +201,7 @@ export type Database = {
           id: string
           last_updated: string
           pdf_url: string | null
+          preview_text: string | null
           price_usd: number | null
           published: boolean
           sections: Json
@@ -215,6 +216,7 @@ export type Database = {
           id?: string
           last_updated?: string
           pdf_url?: string | null
+          preview_text?: string | null
           price_usd?: number | null
           published?: boolean
           sections?: Json
@@ -229,12 +231,55 @@ export type Database = {
           id?: string
           last_updated?: string
           pdf_url?: string | null
+          preview_text?: string | null
           price_usd?: number | null
           published?: boolean
           sections?: Json
           summary?: string | null
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      media_assets: {
+        Row: {
+          active: boolean
+          alt_text: string | null
+          collection: string
+          country_slug: string | null
+          created_at: string
+          id: string
+          kind: string
+          sort_order: number
+          title: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          active?: boolean
+          alt_text?: string | null
+          collection?: string
+          country_slug?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          sort_order?: number
+          title: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          active?: boolean
+          alt_text?: string | null
+          collection?: string
+          country_slug?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          sort_order?: number
+          title?: string
+          updated_at?: string
+          url?: string
         }
         Relationships: []
       }
@@ -270,6 +315,33 @@ export type Database = {
           id?: string
           status?: string
           subject?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      newsletter_subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          language: string
+          source: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          language?: string
+          source?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          language?: string
+          source?: string | null
           updated_at?: string
         }
         Relationships: []
