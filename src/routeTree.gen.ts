@@ -36,6 +36,7 @@ import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminRequestsRouteImport } from './routes/admin.requests'
 import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
 import { Route as AdminOffersRouteImport } from './routes/admin.offers'
+import { Route as AdminMediaRouteImport } from './routes/admin.media'
 import { Route as AdminGuidesRouteImport } from './routes/admin.guides'
 import { Route as AdminCountriesRouteImport } from './routes/admin.countries'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
@@ -175,6 +176,11 @@ const AdminOffersRoute = AdminOffersRouteImport.update({
   path: '/offers',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminMediaRoute = AdminMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminGuidesRoute = AdminGuidesRouteImport.update({
   id: '/guides',
   path: '/guides',
@@ -211,6 +217,7 @@ export interface FileRoutesByFullPath {
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/countries': typeof AdminCountriesRoute
   '/admin/guides': typeof AdminGuidesRoute
+  '/admin/media': typeof AdminMediaRoute
   '/admin/offers': typeof AdminOffersRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/requests': typeof AdminRequestsRoute
@@ -242,6 +249,7 @@ export interface FileRoutesByTo {
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/countries': typeof AdminCountriesRoute
   '/admin/guides': typeof AdminGuidesRoute
+  '/admin/media': typeof AdminMediaRoute
   '/admin/offers': typeof AdminOffersRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/requests': typeof AdminRequestsRoute
@@ -275,6 +283,7 @@ export interface FileRoutesById {
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/countries': typeof AdminCountriesRoute
   '/admin/guides': typeof AdminGuidesRoute
+  '/admin/media': typeof AdminMediaRoute
   '/admin/offers': typeof AdminOffersRoute
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/requests': typeof AdminRequestsRoute
@@ -309,6 +318,7 @@ export interface FileRouteTypes {
     | '/admin/analytics'
     | '/admin/countries'
     | '/admin/guides'
+    | '/admin/media'
     | '/admin/offers'
     | '/admin/orders'
     | '/admin/requests'
@@ -340,6 +350,7 @@ export interface FileRouteTypes {
     | '/admin/analytics'
     | '/admin/countries'
     | '/admin/guides'
+    | '/admin/media'
     | '/admin/offers'
     | '/admin/orders'
     | '/admin/requests'
@@ -372,6 +383,7 @@ export interface FileRouteTypes {
     | '/admin/analytics'
     | '/admin/countries'
     | '/admin/guides'
+    | '/admin/media'
     | '/admin/offers'
     | '/admin/orders'
     | '/admin/requests'
@@ -601,6 +613,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminOffersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/media': {
+      id: '/admin/media'
+      path: '/media'
+      fullPath: '/admin/media'
+      preLoaderRoute: typeof AdminMediaRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/guides': {
       id: '/admin/guides'
       path: '/guides'
@@ -629,6 +648,7 @@ interface AdminRouteChildren {
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
   AdminCountriesRoute: typeof AdminCountriesRoute
   AdminGuidesRoute: typeof AdminGuidesRoute
+  AdminMediaRoute: typeof AdminMediaRoute
   AdminOffersRoute: typeof AdminOffersRoute
   AdminOrdersRoute: typeof AdminOrdersRoute
   AdminRequestsRoute: typeof AdminRequestsRoute
@@ -640,6 +660,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAnalyticsRoute: AdminAnalyticsRoute,
   AdminCountriesRoute: AdminCountriesRoute,
   AdminGuidesRoute: AdminGuidesRoute,
+  AdminMediaRoute: AdminMediaRoute,
   AdminOffersRoute: AdminOffersRoute,
   AdminOrdersRoute: AdminOrdersRoute,
   AdminRequestsRoute: AdminRequestsRoute,
