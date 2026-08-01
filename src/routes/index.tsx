@@ -21,6 +21,9 @@ import { CountryCard } from "@/components/country-card";
 import { HomeOffers } from "@/components/home-offers";
 import { InspirationGallery } from "@/components/inspiration-gallery";
 import { TrustAndNewsletter } from "@/components/trust-newsletter";
+import { WhyChoose } from "@/components/why-choose";
+import { Testimonials } from "@/components/testimonials";
+
 import { continents, popularCountries, countries } from "@/data/countries";
 import { site, formatUSD } from "@/config/site";
 import { DISCLAIMER_SCOPE } from "@/lib/estimator";
@@ -379,6 +382,9 @@ function Home() {
       <HomeOffers />
 
       <InspirationGallery />
+      <WhyChoose />
+      <Testimonials />
+
 
       {/* 10 — How it works */}
 

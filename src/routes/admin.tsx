@@ -27,7 +27,9 @@ const NAV = [
   { to: "/admin/countries", label: "الدول" },
   { to: "/admin/guides", label: "الأدلة" },
   { to: "/admin/media", label: "الوسائط" },
+  { to: "/admin/testimonials", label: "آراء العملاء" },
   { to: "/admin/settings", label: "الأسعار والإعدادات" },
+
 ] as const;
 
 
