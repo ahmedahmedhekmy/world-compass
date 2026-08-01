@@ -148,11 +148,11 @@ function CountryPage() {
       <div className="container-page pt-6">
         <Breadcrumbs
           items={[
-            { name: "الرئيسية", href: "/" },
-            { name: "الدول", href: "/countries" },
-            { name: c.ar, href: `/countries/${c.slug}` },
+            { label: "الدول", href: "/countries" },
+            { label: c.ar },
           ]}
         />
+
       </div>
 
       <div className="container-page grid gap-10 py-8 lg:grid-cols-[minmax(0,1fr)_320px]">
