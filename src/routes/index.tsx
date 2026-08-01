@@ -382,6 +382,9 @@ function Home() {
       <HomeOffers />
 
       <InspirationGallery />
+      <WhyChoose />
+      <Testimonials />
+
 
       {/* 10 — How it works */}
 
