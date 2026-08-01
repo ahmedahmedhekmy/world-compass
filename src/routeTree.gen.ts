@@ -33,6 +33,7 @@ import { Route as LibrarySlugRouteImport } from './routes/library.$slug'
 import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
 import { Route as CountriesSlugRouteImport } from './routes/countries.$slug'
 import { Route as ContinentsSlugRouteImport } from './routes/continents.$slug'
+import { Route as AdminTestimonialsRouteImport } from './routes/admin.testimonials'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminRequestsRouteImport } from './routes/admin.requests'
 import { Route as AdminOrdersRouteImport } from './routes/admin.orders'
@@ -163,6 +164,11 @@ const ContinentsSlugRoute = ContinentsSlugRouteImport.update({
   path: '/continents/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminTestimonialsRoute = AdminTestimonialsRouteImport.update({
+  id: '/testimonials',
+  path: '/testimonials',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminSettingsRoute = AdminSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -236,6 +242,7 @@ export interface FileRoutesByFullPath {
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/requests': typeof AdminRequestsRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/admin/testimonials': typeof AdminTestimonialsRoute
   '/continents/$slug': typeof ContinentsSlugRoute
   '/countries/$slug': typeof CountriesSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
@@ -270,6 +277,7 @@ export interface FileRoutesByTo {
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/requests': typeof AdminRequestsRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/admin/testimonials': typeof AdminTestimonialsRoute
   '/continents/$slug': typeof ContinentsSlugRoute
   '/countries/$slug': typeof CountriesSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
@@ -306,6 +314,7 @@ export interface FileRoutesById {
   '/admin/orders': typeof AdminOrdersRoute
   '/admin/requests': typeof AdminRequestsRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/admin/testimonials': typeof AdminTestimonialsRoute
   '/continents/$slug': typeof ContinentsSlugRoute
   '/countries/$slug': typeof CountriesSlugRoute
   '/guides/$slug': typeof GuidesSlugRoute
@@ -343,6 +352,7 @@ export interface FileRouteTypes {
     | '/admin/orders'
     | '/admin/requests'
     | '/admin/settings'
+    | '/admin/testimonials'
     | '/continents/$slug'
     | '/countries/$slug'
     | '/guides/$slug'
@@ -377,6 +387,7 @@ export interface FileRouteTypes {
     | '/admin/orders'
     | '/admin/requests'
     | '/admin/settings'
+    | '/admin/testimonials'
     | '/continents/$slug'
     | '/countries/$slug'
     | '/guides/$slug'
@@ -412,6 +423,7 @@ export interface FileRouteTypes {
     | '/admin/orders'
     | '/admin/requests'
     | '/admin/settings'
+    | '/admin/testimonials'
     | '/continents/$slug'
     | '/countries/$slug'
     | '/guides/$slug'
@@ -617,6 +629,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContinentsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/testimonials': {
+      id: '/admin/testimonials'
+      path: '/testimonials'
+      fullPath: '/admin/testimonials'
+      preLoaderRoute: typeof AdminTestimonialsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/settings': {
       id: '/admin/settings'
       path: '/settings'
@@ -693,6 +712,7 @@ interface AdminRouteChildren {
   AdminOrdersRoute: typeof AdminOrdersRoute
   AdminRequestsRoute: typeof AdminRequestsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminTestimonialsRoute: typeof AdminTestimonialsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
@@ -706,6 +726,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminOrdersRoute: AdminOrdersRoute,
   AdminRequestsRoute: AdminRequestsRoute,
   AdminSettingsRoute: AdminSettingsRoute,
+  AdminTestimonialsRoute: AdminTestimonialsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
