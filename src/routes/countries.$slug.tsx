@@ -60,11 +60,11 @@ export const Route = createFileRoute("/countries/$slug")({
           type: "application/ld+json",
           children: JSON.stringify(
             breadcrumbJsonLd([
-              { name: "الرئيسية", href: "/" },
-              { name: "الدول", href: "/countries" },
-              { name: c.ar, href: path },
+              { name: "الدول", item: "/countries" },
+              { name: c.ar, item: path },
             ]),
           ),
+
         },
       ],
     };
