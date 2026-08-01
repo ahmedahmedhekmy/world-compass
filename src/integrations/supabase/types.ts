@@ -193,6 +193,27 @@ export type Database = {
         }
         Relationships: []
       }
+      favorites: {
+        Row: {
+          country_slug: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          country_slug: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          country_slug?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       guides: {
         Row: {
           country_slug: string
@@ -505,6 +526,48 @@ export type Database = {
           key?: string
           updated_at?: string
           value?: Json
+        }
+        Relationships: []
+      }
+      testimonials: {
+        Row: {
+          comment: string
+          country: string | null
+          created_at: string
+          id: string
+          is_demo: boolean
+          name: string
+          photo_url: string | null
+          published: boolean
+          rating: number
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          comment: string
+          country?: string | null
+          created_at?: string
+          id?: string
+          is_demo?: boolean
+          name: string
+          photo_url?: string | null
+          published?: boolean
+          rating?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          comment?: string
+          country?: string | null
+          created_at?: string
+          id?: string
+          is_demo?: boolean
+          name?: string
+          photo_url?: string | null
+          published?: boolean
+          rating?: number
+          sort_order?: number
+          updated_at?: string
         }
         Relationships: []
       }
