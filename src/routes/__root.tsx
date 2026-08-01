@@ -149,7 +149,9 @@ function RootComponent() {
         </div>
         <Toaster position="top-center" richColors />
         <AnalyticsTracker />
+        <WhatsAppButton />
       </LanguageProvider>
+
     </QueryClientProvider>
   );
 }
