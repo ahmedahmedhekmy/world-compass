@@ -37,6 +37,12 @@ function AdminSettings() {
   const pricing = (data?.pricing ?? {}) as Record<string, number | string>;
   const contact = (data?.contact ?? {}) as Record<string, string>;
   const payments = (data?.payments ?? {}) as Record<string, unknown>;
+  const homepage = (data?.homepage ?? {}) as Record<string, string>;
+  const trust = (data?.trust ?? {}) as { badges?: string[] };
+  const comparison = (data?.comparison ?? {}) as {
+    rows?: { without: string; with: string }[];
+  };
+
 
   return (
     <>
