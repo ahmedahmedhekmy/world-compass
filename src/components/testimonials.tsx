@@ -1,0 +1,96 @@
+import { useQuery } from "@tanstack/react-query";
+import { Star } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+
+interface Testimonial {
+  id: string;
+  name: string;
+  country: string | null;
+  rating: number;
+  comment: string;
+  photo_url: string | null;
+  is_demo: boolean;
+}
+
+function Stars({ rating }: { rating: number }) {
+  return (
+    <div className="flex gap-0.5" aria-label={`التقييم ${rating} من 5`}>
+      {[1, 2, 3, 4, 5].map((n) => (
+        <Star
+          key={n}
+          aria-hidden
+          className={
+            "size-4 " + (n <= rating ? "fill-primary text-primary" : "text-muted-foreground/40")
+          }
+        />
+      ))}
+    </div>
+  );
+}
+
+export function Testimonials() {
+  const { data } = useQuery({
+    queryKey: ["testimonials"],
+    staleTime: 60_000,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("testimonials")
+        .select("id, name, country, rating, comment, photo_url, is_demo")
+        .eq("published", true)
+        .order("sort_order", { ascending: true });
+      return (data ?? []) as Testimonial[];
+    },
+  });
+
+  const items = data ?? [];
+  if (items.length === 0) return null;
+  const anyDemo = items.some((t) => t.is_demo);
+
+  return (
+    <section className="container-page py-16">
+      <h2 className="text-2xl font-black sm:text-3xl">آراء المسافرين</h2>
+      {anyDemo && (
+        <p className="mt-2 text-xs text-muted-foreground">
+          بعض الآراء المعروضة هي نماذج توضيحية مؤقتة لعرض شكل القسم.
+        </p>
+      )}
+      <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {items.map((t) => (
+          <figure key={t.id} className="flex h-full flex-col rounded-3xl border border-border p-5">
+            <Stars rating={t.rating} />
+            <blockquote className="mt-3 flex-1 text-balance-ar text-sm text-muted-foreground">
+              {t.comment}
+            </blockquote>
+            <figcaption className="mt-4 flex items-center gap-3 border-t border-border pt-4">
+              {t.photo_url ? (
+                <img
+                  src={t.photo_url}
+                  alt=""
+                  loading="lazy"
+                  width={40}
+                  height={40}
+                  className="size-10 rounded-full object-cover"
+                />
+              ) : (
+                <span className="grid size-10 place-items-center rounded-full bg-secondary text-sm font-bold">
+                  {t.name.slice(0, 1)}
+                </span>
+              )}
+              <span className="text-sm">
+                <span className="block font-bold">{t.name}</span>
+                {t.country && (
+                  <span className="block text-xs text-muted-foreground">{t.country}</span>
+                )}
+              </span>
+            </figcaption>
+            {t.is_demo && (
+              <span className="mt-3 w-fit rounded-full bg-secondary px-2 py-0.5 text-[10px] text-muted-foreground">
+                نموذج توضيحي
+              </span>
+            )}
+          </figure>
+        ))}
+      </div>
+    </section>
+  );
+}
