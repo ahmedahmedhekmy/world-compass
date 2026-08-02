@@ -10,6 +10,8 @@ import { formatUSD } from "@/config/site";
 import { countryBySlug } from "@/data/countries";
 import { createOrder } from "@/lib/leads.functions";
 import { useSiteSettings } from "@/lib/site-settings";
+import { TrustBadges } from "@/components/trust-badges";
+
 
 const searchSchema = z.object({
   product: z.enum(["guide", "planning"]).catch("guide"),
@@ -124,6 +126,29 @@ function Checkout() {
         </form>
       )}
 
+      <div className="mt-8 rounded-3xl border border-border p-6">
+        <h2 className="text-sm font-extrabold">ماذا يحدث بعد الطلب؟</h2>
+        <ol className="mt-4 grid gap-3 text-sm text-muted-foreground">
+          {[
+            "نسجّل طلبك برقم مرجعي خاص بك ونرسله إلى بريدك.",
+            isGuide
+              ? "بعد تأكيد الدفع يُفعّل الدليل مباشرة داخل «حسابي» ويمكنك فتحه أو تحميله في أي وقت."
+              : "بعد تأكيد الدفع يتواصل معك فريق التخطيط خلال 24 ساعة لبدء تفاصيل رحلتك.",
+            "الوصول يبقى متاحًا في حسابك مع كل تحديث جديد للمحتوى.",
+          ].map((step, i) => (
+            <li key={step} className="flex gap-3">
+              <span className="grid size-6 shrink-0 place-items-center rounded-full bg-secondary text-xs font-bold">
+                {i + 1}
+              </span>
+              <span className="leading-6">{step}</span>
+            </li>
+          ))}
+        </ol>
+        <div className="mt-5 border-t border-border pt-5">
+          <TrustBadges compact />
+        </div>
+      </div>
+
       <div className="mt-6 flex flex-wrap gap-3">
         <Button asChild variant="outline">
           <Link to="/guides">العودة إلى الأدلة</Link>
@@ -131,7 +156,11 @@ function Checkout() {
         <Button asChild variant="outline">
           <Link to="/refund">سياسة الاسترجاع</Link>
         </Button>
+        <Button asChild variant="outline">
+          <Link to="/contact">هل لديك سؤال؟</Link>
+        </Button>
       </div>
+
     </section>
   );
 }
