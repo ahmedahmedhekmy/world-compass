@@ -71,6 +71,14 @@ function AdminGuides() {
     qc.invalidateQueries({ queryKey: ["admin-guides"] });
   }
 
+  async function remove(id: string) {
+    const { error } = await supabase.from("guides").delete().eq("id", id);
+    if (error) return toast.error("تعذّر الحذف");
+    toast.success("تم حذف الدليل");
+    qc.invalidateQueries({ queryKey: ["admin-guides"] });
+  }
+
+
   return (
     <>
       <h1 className="text-2xl font-extrabold">الأدلة المدفوعة</h1>
