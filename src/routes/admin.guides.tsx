@@ -71,6 +71,14 @@ function AdminGuides() {
     qc.invalidateQueries({ queryKey: ["admin-guides"] });
   }
 
+  async function remove(id: string) {
+    const { error } = await supabase.from("guides").delete().eq("id", id);
+    if (error) return toast.error("تعذّر الحذف");
+    toast.success("تم حذف الدليل");
+    qc.invalidateQueries({ queryKey: ["admin-guides"] });
+  }
+
+
   return (
     <>
       <h1 className="text-2xl font-extrabold">الأدلة المدفوعة</h1>
@@ -105,15 +113,31 @@ function AdminGuides() {
       <div className="mt-8 grid gap-4">
         {(guides ?? []).map((g) => {
           const sections = (g.sections as unknown as Section[]) ?? [];
+          const extra = g as unknown as {
+            preview_text?: string | null;
+            version?: string | null;
+            seo_title?: string | null;
+            seo_description?: string | null;
+          };
           return (
             <div key={g.id} className="rounded-3xl border border-border p-5 text-sm">
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <p className="font-bold">{g.title}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {g.country_slug} · {sections.length} فصل ·{" "}
-                    {g.published ? "منشور" : "مسودة"}
-                  </p>
+                <div className="flex items-center gap-3">
+                  {g.cover_image_url && (
+                    <img
+                      src={g.cover_image_url}
+                      alt=""
+                      loading="lazy"
+                      className="size-14 rounded-2xl object-cover"
+                    />
+                  )}
+                  <div>
+                    <p className="font-bold">{g.title}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {g.country_slug} · {sections.length} فصل · {extra.version ?? "v1.0"} · آخر تحديث{" "}
+                      {g.last_updated} · {g.published ? "منشور" : "مسودة"}
+                    </p>
+                  </div>
                 </div>
                 <div className="flex gap-2">
                   <Button variant="outline" size="sm" onClick={() => setEditing(editing === g.id ? null : g.id)}>
@@ -121,6 +145,9 @@ function AdminGuides() {
                   </Button>
                   <Button variant="outline" size="sm" onClick={() => save(g.id, { published: !g.published })}>
                     {g.published ? "إلغاء النشر" : "نشر"}
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={() => remove(g.id)}>
+                    حذف
                   </Button>
                 </div>
               </div>
@@ -135,8 +162,14 @@ function AdminGuides() {
                     try {
                       const parsed = JSON.parse(raw) as Section[];
                       save(g.id, {
+                        title: String(fd.get("title") ?? g.title),
+                        country_slug: String(fd.get("country_slug") ?? g.country_slug),
                         sections: parsed,
                         price_usd: Number(fd.get("price")) || null,
+                        cover_image_url: String(fd.get("cover") ?? "") || null,
+                        version: String(fd.get("version") ?? "") || "v1.0",
+                        seo_title: String(fd.get("seo_title") ?? "") || null,
+                        seo_description: String(fd.get("seo_description") ?? "") || null,
                         pdf_url: String(fd.get("pdf_url") ?? "") || null,
                         summary: String(fd.get("summary") ?? "") || null,
                         preview_text: String(fd.get("preview_text") ?? "") || null,
@@ -147,24 +180,67 @@ function AdminGuides() {
                     }
                   }}
                 >
-                  <Label htmlFor={`summary-${g.id}`}>ملخص الدليل</Label>
+                  <Label htmlFor={`title-${g.id}`}>عنوان الدليل</Label>
+                  <Input id={`title-${g.id}`} name="title" defaultValue={g.title} />
+
+                  <Label htmlFor={`country-${g.id}`}>الدولة</Label>
+                  <select
+                    id={`country-${g.id}`}
+                    name="country_slug"
+                    defaultValue={g.country_slug}
+                    className="h-10 rounded-xl border border-border bg-background px-3 text-sm"
+                  >
+                    {countries.map((c) => (
+                      <option key={c.slug} value={c.slug}>
+                        {c.ar}
+                      </option>
+                    ))}
+                  </select>
+
+                  <Label htmlFor={`cover-${g.id}`}>رابط صورة الغلاف</Label>
+                  <Input id={`cover-${g.id}`} name="cover" defaultValue={g.cover_image_url ?? ""} />
+
+                  <Label htmlFor={`summary-${g.id}`}>وصف الدليل</Label>
                   <Input id={`summary-${g.id}`} name="summary" defaultValue={g.summary ?? ""} />
+
                   <Label htmlFor={`preview-${g.id}`}>نص المعاينة المجانية</Label>
                   <Textarea
                     id={`preview-${g.id}`}
                     name="preview_text"
                     rows={4}
-                    defaultValue={(g as { preview_text?: string | null }).preview_text ?? ""}
+                    defaultValue={extra.preview_text ?? ""}
                   />
-                  <Label htmlFor={`price-${g.id}`}>السعر (USD)</Label>
-                  <Input id={`price-${g.id}`} name="price" type="number" defaultValue={g.price_usd ?? ""} />
-                  <Label htmlFor={`updated-${g.id}`}>تاريخ آخر تحديث</Label>
-                  <Input
-                    id={`updated-${g.id}`}
-                    name="last_updated"
-                    type="date"
-                    defaultValue={g.last_updated ?? ""}
+
+                  <div className="grid gap-3 sm:grid-cols-3">
+                    <div className="grid gap-2">
+                      <Label htmlFor={`price-${g.id}`}>السعر (USD)</Label>
+                      <Input id={`price-${g.id}`} name="price" type="number" defaultValue={g.price_usd ?? ""} />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor={`version-${g.id}`}>الإصدار</Label>
+                      <Input id={`version-${g.id}`} name="version" defaultValue={extra.version ?? "v1.0"} />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor={`updated-${g.id}`}>تاريخ آخر تحديث</Label>
+                      <Input
+                        id={`updated-${g.id}`}
+                        name="last_updated"
+                        type="date"
+                        defaultValue={g.last_updated ?? ""}
+                      />
+                    </div>
+                  </div>
+
+                  <Label htmlFor={`seot-${g.id}`}>عنوان SEO</Label>
+                  <Input id={`seot-${g.id}`} name="seo_title" defaultValue={extra.seo_title ?? ""} />
+                  <Label htmlFor={`seod-${g.id}`}>وصف SEO</Label>
+                  <Textarea
+                    id={`seod-${g.id}`}
+                    name="seo_description"
+                    rows={2}
+                    defaultValue={extra.seo_description ?? ""}
                   />
+
                   <Label htmlFor={`pdf-${g.id}`}>ملف PDF (مسار داخلي أو رابط)</Label>
                   <Input id={`pdf-${g.id}`} name="pdf_url" defaultValue={g.pdf_url ?? ""} />
                   <div className="flex items-center gap-3">
@@ -199,7 +275,11 @@ function AdminGuides() {
             </div>
           );
         })}
+        {(guides ?? []).length === 0 && (
+          <p className="text-sm text-muted-foreground">لا توجد أدلة بعد — أنشئ أول دليل من الأعلى.</p>
+        )}
       </div>
     </>
   );
 }
+

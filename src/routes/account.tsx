@@ -1,10 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { formatUSD } from "@/config/site";
+import { countryBySlug } from "@/data/countries";
+import { useFavorites, readRecentCountries } from "@/lib/favorites";
+
 
 export const Route = createFileRoute("/account")({
   head: () => ({
@@ -83,6 +86,8 @@ function AccountPage() {
         </ul>
       )}
 
+      <SavedDestinations />
+
       <h2 className="mt-10 text-lg font-bold">طلباتي</h2>
       <div className="mt-3 overflow-x-auto rounded-3xl border border-border">
         <table className="w-full text-right text-sm">
@@ -116,6 +121,60 @@ function AccountPage() {
     </section>
   );
 }
+
+function CountryGrid({ slugs }: { slugs: string[] }) {
+  return (
+    <ul className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {slugs.map((slug) => {
+        const c = countryBySlug(slug);
+        return (
+          <li key={slug}>
+            <Link
+              to="/countries/$slug"
+              params={{ slug }}
+              className="flex items-center gap-3 rounded-2xl border border-border px-4 py-3 text-sm transition-colors hover:bg-secondary"
+            >
+              <span aria-hidden className="text-xl">
+                {c?.flag ?? "🌍"}
+              </span>
+              <span className="font-semibold">{c?.ar ?? slug}</span>
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+function SavedDestinations() {
+  const { slugs } = useFavorites();
+  const [recent, setRecent] = useState<string[]>([]);
+  useEffect(() => setRecent(readRecentCountries()), []);
+  const recentOnly = recent.filter((s) => !slugs.includes(s));
+
+  return (
+    <>
+      <h2 className="mt-10 text-lg font-bold">وجهاتي المفضّلة</h2>
+      {slugs.length === 0 ? (
+        <p className="mt-2 text-sm text-muted-foreground">
+          لم تحفظ وجهات بعد. اضغط على أيقونة القلب في صفحة أي دولة لحفظها هنا.
+        </p>
+      ) : (
+        <CountryGrid slugs={slugs} />
+      )}
+
+      <h2 className="mt-10 text-lg font-bold">شاهدتها مؤخرًا</h2>
+      {recentOnly.length === 0 ? (
+        <p className="mt-2 text-sm text-muted-foreground">
+          ستظهر هنا آخر الوجهات التي تصفّحتها على هذا الجهاز.
+        </p>
+      ) : (
+        <CountryGrid slugs={recentOnly.slice(0, 6)} />
+      )}
+    </>
+  );
+}
+
 
 export function statusAr(status: string) {
   return (

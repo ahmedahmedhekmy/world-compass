@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -9,7 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Countdown } from "@/components/countdown";
 import { formatUSD } from "@/config/site";
+
 
 export const Route = createFileRoute("/offers")({
   head: () => ({
@@ -38,6 +40,8 @@ interface Offer {
   starting_price_usd: number | null;
   image_url: string | null;
   cta_label: string | null;
+  ends_at: string | null;
+  featured: boolean | null;
 }
 
 function OffersPage() {
@@ -46,7 +50,9 @@ function OffersPage() {
     queryFn: async () => {
       const { data } = await supabase
         .from("offers")
-        .select("id, title, destination, duration, includes, starting_price_usd, image_url, cta_label")
+        .select(
+          "id, title, destination, duration, includes, starting_price_usd, image_url, cta_label, ends_at, featured",
+        )
         .order("featured", { ascending: false })
         .order("sort_order", { ascending: true });
       return (data ?? []) as Offer[];
@@ -54,6 +60,7 @@ function OffersPage() {
   });
 
   const [selected, setSelected] = useState<Offer | null>(null);
+  const items = offers ?? [];
 
   return (
     <>
@@ -68,24 +75,53 @@ function OffersPage() {
       </section>
 
       <section className="container-page py-12">
-        {isLoading && <p className="text-sm text-muted-foreground">جارٍ تحميل العروض…</p>}
-        {!isLoading && (offers ?? []).length === 0 && (
-          <p className="rounded-3xl bg-secondary p-6 text-sm text-muted-foreground">
-            لا توجد عروض منشورة حاليًا. تابعنا قريبًا لعروض الأسبوع القادم.
-          </p>
+        {isLoading && (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="h-72 animate-pulse rounded-3xl bg-secondary" />
+            ))}
+          </div>
         )}
+
+        {!isLoading && items.length === 0 && (
+          <div className="mx-auto max-w-xl rounded-3xl border border-border p-10 text-center">
+            <span className="mx-auto grid size-14 place-items-center rounded-full bg-secondary text-2xl">
+              ✈️
+            </span>
+            <h2 className="mt-5 text-lg font-extrabold">عروض هذا الأسبوع قيد الإعداد</h2>
+            <p className="mt-2 text-balance-ar text-sm text-muted-foreground">
+              نُحدّث العروض أسبوعيًا. اشترك في النشرة ليصلك عرض الأسبوع القادم أولًا، أو ابدأ الآن
+              بحساب ميزانية رحلتك مجانًا.
+            </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Button asChild variant="hero">
+                <Link to="/calculator">احسب ميزانية رحلتك</Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link to="/countries">تصفّح الوجهات</Link>
+              </Button>
+            </div>
+          </div>
+        )}
+
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {(offers ?? []).map((o) => (
+          {items.map((o) => (
             <article key={o.id} className="overflow-hidden rounded-3xl border border-border">
               {o.image_url && (
                 <img
                   src={o.image_url}
                   alt={o.title}
                   loading="lazy"
+                  decoding="async"
                   className="h-44 w-full object-cover"
                 />
               )}
               <div className="p-5">
+                {o.featured && (
+                  <span className="mb-2 inline-block rounded-full bg-primary px-3 py-1 text-[10px] font-bold text-primary-foreground">
+                    عرض مميز
+                  </span>
+                )}
                 <h2 className="font-extrabold">{o.title}</h2>
                 <p className="mt-1 text-xs text-muted-foreground">
                   {[o.destination, o.duration].filter(Boolean).join(" · ")}
@@ -96,6 +132,14 @@ function OffersPage() {
                       <li key={i}>• {i}</li>
                     ))}
                   </ul>
+                )}
+                {o.ends_at && (
+                  <div className="mt-4">
+                    <p className="mb-1.5 text-[11px] font-semibold text-muted-foreground">
+                      ينتهي العرض خلال
+                    </p>
+                    <Countdown endsAt={o.ends_at} />
+                  </div>
                 )}
                 {o.starting_price_usd != null && (
                   <p className="mt-4 text-2xl font-black">
@@ -109,6 +153,7 @@ function OffersPage() {
             </article>
           ))}
         </div>
+
 
         {selected && <BookingForm offer={selected} onDone={() => setSelected(null)} />}
       </section>

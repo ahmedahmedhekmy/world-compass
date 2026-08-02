@@ -226,9 +226,12 @@ export type Database = {
           price_usd: number | null
           published: boolean
           sections: Json
+          seo_description: string | null
+          seo_title: string | null
           summary: string | null
           title: string
           updated_at: string
+          version: string
         }
         Insert: {
           country_slug: string
@@ -241,9 +244,12 @@ export type Database = {
           price_usd?: number | null
           published?: boolean
           sections?: Json
+          seo_description?: string | null
+          seo_title?: string | null
           summary?: string | null
           title: string
           updated_at?: string
+          version?: string
         }
         Update: {
           country_slug?: string
@@ -256,9 +262,12 @@ export type Database = {
           price_usd?: number | null
           published?: boolean
           sections?: Json
+          seo_description?: string | null
+          seo_title?: string | null
           summary?: string | null
           title?: string
           updated_at?: string
+          version?: string
         }
         Relationships: []
       }
@@ -272,6 +281,7 @@ export type Database = {
           id: string
           kind: string
           sort_order: number
+          storage_path: string | null
           title: string
           updated_at: string
           url: string
@@ -285,6 +295,7 @@ export type Database = {
           id?: string
           kind?: string
           sort_order?: number
+          storage_path?: string | null
           title: string
           updated_at?: string
           url: string
@@ -298,6 +309,7 @@ export type Database = {
           id?: string
           kind?: string
           sort_order?: number
+          storage_path?: string | null
           title?: string
           updated_at?: string
           url?: string
