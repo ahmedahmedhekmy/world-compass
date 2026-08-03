@@ -115,6 +115,14 @@ function Checkout() {
             </Button>
           </div>
         </div>
+      ) : busy ? (
+        <div className="mt-6 animate-pulse space-y-4 rounded-3xl border border-border p-6">
+          <div className="h-6 w-32 rounded bg-secondary" />
+          <div className="h-10 w-full rounded bg-secondary" />
+          <div className="h-10 w-full rounded bg-secondary" />
+          <div className="h-24 w-full rounded bg-secondary" />
+          <div className="h-12 w-32 rounded bg-secondary" />
+        </div>
       ) : (
         <form onSubmit={onSubmit} className="mt-6 grid gap-4 rounded-3xl border border-border p-6">
           <div className="grid gap-2">

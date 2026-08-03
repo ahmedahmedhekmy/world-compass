@@ -29,7 +29,7 @@ function Stars({ rating }: { rating: number }) {
 }
 
 export function Testimonials() {
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["testimonials"],
     staleTime: 60_000,
     queryFn: async () => {
@@ -43,6 +43,30 @@ export function Testimonials() {
   });
 
   const items = data ?? [];
+  if (isLoading) {
+    return (
+      <section className="container-page py-16">
+        <h2 className="text-2xl font-black sm:text-3xl">آراء المسافرين</h2>
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="animate-pulse rounded-3xl border border-border p-5">
+              <div className="flex gap-0.5">
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <div key={n} className="size-4 rounded bg-secondary" />
+                ))}
+              </div>
+              <div className="mt-3 h-20 rounded bg-secondary" />
+              <div className="mt-4 flex items-center gap-3 border-t border-border pt-4">
+                <div className="size-10 rounded-full bg-secondary" />
+                <div className="h-4 w-20 rounded bg-secondary" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
   if (items.length === 0) return null;
   const anyDemo = items.some((t) => t.is_demo);
 
