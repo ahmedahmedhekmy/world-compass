@@ -122,14 +122,16 @@ export const createOrder = createServerFn({ method: "POST" })
 
     let amount =
       data.product_type === "guide" ? (pricing.guidePriceUSD ?? 19) : (pricing.planningStartFeeUSD ?? 49);
+    let countryName: string | undefined;
 
     if (data.product_type === "guide" && data.country_slug) {
       const { data: guide } = await supabaseAdmin
         .from("guides")
-        .select("price_usd")
+        .select("price_usd, title")
         .eq("country_slug", data.country_slug)
         .maybeSingle();
       if (guide?.price_usd) amount = Number(guide.price_usd);
+      if (guide?.title) countryName = guide.title.replace("دليل السفر إلى ", "");
     }
 
     const reference = `TSB-${data.product_type === "guide" ? "GUIDE" : "PLAN"}-${new Date().getFullYear()}-${Math.floor(
@@ -161,20 +163,52 @@ export const createOrder = createServerFn({ method: "POST" })
       amount_usd: amount,
       status: "pending",
       admin_notes: data.notes ?? null,
+      stripe_session_id: null,
+      paid_at: null,
+      currency: "USD",
     } as never);
     if (error) throw new Error("تعذّر إنشاء الطلب، حاول مرة أخرى.");
 
+    // Try to create Stripe checkout session if configured
+    let checkoutUrl: string | null = null;
+    try {
+      const { createCheckoutSession, isStripeConfigured } = await import("./stripe.server");
+      if (isStripeConfigured()) {
+        const session = await createCheckoutSession({
+          productType: data.product_type,
+          countrySlug: data.country_slug,
+          countryName,
+          price: amount,
+          customerEmail: data.email,
+          reference,
+        });
+        if (session) {
+          checkoutUrl = session.url;
+          // Update order with stripe session ID
+          await supabaseAdmin
+            .from("orders")
+            .update({ stripe_session_id: session.sessionId })
+            .eq("reference", reference);
+        }
+      }
+    } catch (err) {
+      // Log but don't fail - order is created, payment is optional
+      console.error("[Stripe] Failed to create checkout session:", err);
+    }
 
     await sendAdminEmail("طلب شراء جديد", [
       ["رقم الطلب", reference],
-      ...Object.entries(data),
+      ["البريد", data.email],
+      ["المنتج", data.product_type],
+      ...(data.country_slug ? ([["الدولة", data.country_slug]] as [string, unknown][]) : []),
       ["المبلغ", `${amount} USD`],
+      ...(checkoutUrl ? ([["رابط الدفع", checkoutUrl]] as [string, unknown][]) : []),
     ]);
     await sendCustomerEmail(
       data.email,
       `تأكيد الطلب ${reference} | Travel Smart Budget`,
-      `<p>مرحبًا ${data.full_name}،</p><p>تم إنشاء طلبك برقم <b>${reference}</b> بقيمة ${amount} دولارًا.</p><p>سنرسل لك تعليمات إتمام الدفع خلال وقت قصير.</p>`,
+      `<p>مرحبًا ${data.full_name}،</p><p>تم إنشاء طلبك برقم <b>${reference}</b> بقيمة ${amount} دولارًا.</p>${checkoutUrl ? `<p>أكمل الدفع من هنا: <a href="${checkoutUrl}">الدفع الآن</a></p>` : "<p>سنرسل لك تعليمات إتمام الدفع خلال وقت قصير.</p>"}`,
     );
 
-    return { ok: true, reference, amount };
+    return { ok: true, reference, amount, checkoutUrl };
   });
