@@ -35,12 +35,18 @@ export interface HomepageSettings {
   featuredSlugs?: string[];
 }
 
+export interface SEOSettings {
+  ogImageUrl?: string;
+  twitterHandle?: string;
+}
+
 export interface SiteSettings {
   pricing: Pricing;
   contact: ContactSettings;
   trust: TrustSettings;
   comparison: ComparisonSettings;
   homepage: HomepageSettings;
+  seo: SEOSettings;
 }
 
 const defaults: SiteSettings = {
@@ -69,6 +75,10 @@ const defaults: SiteSettings = {
     ],
   },
   homepage: {},
+  seo: {
+    ogImageUrl: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/5a6aedfb-d259-4a89-86bf-813f5adbf89f",
+    twitterHandle: "@travelsmartbudget",
+  },
 };
 
 export const settingsQueryOptions = {
@@ -82,6 +92,7 @@ export const settingsQueryOptions = {
     >;
     const trust = (map.trust as Partial<TrustSettings>) ?? {};
     const comparison = (map.comparison as Partial<ComparisonSettings>) ?? {};
+    const seo = (map.seo as Partial<SEOSettings>) ?? {};
     return {
       pricing: { ...defaults.pricing, ...((map.pricing as Partial<Pricing>) ?? {}) },
       contact: { ...defaults.contact, ...((map.contact as Partial<ContactSettings>) ?? {}) },
@@ -90,6 +101,7 @@ export const settingsQueryOptions = {
         rows: comparison.rows?.length ? comparison.rows : defaults.comparison.rows,
       },
       homepage: { ...defaults.homepage, ...((map.homepage as HomepageSettings) ?? {}) },
+      seo: { ...defaults.seo, ...seo },
     };
   },
 };

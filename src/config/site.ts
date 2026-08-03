@@ -6,7 +6,7 @@
  */
 export const site = {
   name: "Travel Smart Budget",
-  nameAr: "ترافل سمارت بدجت",
+  nameAr: "سافر بذكاء",
   email: "travelsmartbudget@gmail.com",
   tagline: "اكتشف العالم، واعرف تكلفة رحلتك قبل أن تحجز.",
   guidePriceUSD: 19,
