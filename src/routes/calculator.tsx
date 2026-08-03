@@ -67,6 +67,7 @@ function CalculatorPage() {
   const [error, setError] = useState("");
 
   const set = (k: keyof typeof form, v: string | number) => setForm((f) => ({ ...f, [k]: v }));
+  const saveLead = useServerFn(submitTripRequest);
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,6 +105,34 @@ function CalculatorPage() {
     });
     setResult({ ...r, nights });
     setTimeout(() => document.getElementById("result")?.scrollIntoView({ behavior: "smooth" }), 60);
+
+    void saveLead({
+      data: {
+        kind: "estimate",
+        full_name: form.name.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim() || undefined,
+        nationality: form.nationality.trim() || undefined,
+        departure_country: form.fromCountry.trim() || undefined,
+        departure_city: form.fromCity.trim() || undefined,
+        destination_country: country.ar,
+        destination_city: form.destCity.trim() || undefined,
+        start_date: form.start || undefined,
+        end_date: form.end || undefined,
+        nights,
+        adults: Number(form.adults),
+        children: Number(form.children),
+        children_ages: form.childAges.trim() || undefined,
+        accommodation_level: form.accommodation,
+        travel_style: form.style,
+        visa_help: form.visa === "yes",
+        preferred_contact: form.contact,
+        notes: form.notes.trim() || undefined,
+        estimate: { ...r.breakdown, tripTotal: r.tripTotal, perPerson: r.perPerson, nights },
+      },
+    }).catch(() => {
+      /* estimate is still shown; lead capture is best-effort */
+    });
   };
 
   return (
