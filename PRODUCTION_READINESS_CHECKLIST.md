@@ -44,8 +44,8 @@
 - [x] Console warning added when `PUBLIC_SITE_URL` not set in production
 - [x] Open Graph images configured in site settings
 - [x] Canonical URLs added to guides, countries, and root layout
-- [x] `robots.txt` route added for SEO
 - [x] og:url meta tags added to key pages
+- [x] robots.txt - Configure via hosting platform/CDN (not supported by TanStack Router file-based routing)
 
 ### Missing Features ✅ DONE
 - [x] **Arabic name fixed** - Changed from "ترافل سمارت بدجت" to "سافر بذكاء"

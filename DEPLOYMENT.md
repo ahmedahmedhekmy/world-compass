@@ -104,6 +104,7 @@ npm start
 - [ ] Set up monitoring (Sentry, LogRocket, etc.)
 - [ ] Configure CDN caching rules
 - [ ] Test email notifications (if enabled)
+- [ ] Configure robots.txt via hosting platform (Vercel, Netlify, or CDN)
 
 ## Monitoring
 
