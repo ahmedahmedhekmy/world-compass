@@ -3410,3 +3410,23 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+## Performance Recommendations
+
+### Image Optimization
+- Use WebP or AVIF format for all images (convert during build or use a CDN)
+- Implement lazy loading for below-the-fold images
+- Use `fetchpriority="high"` for hero images
+- Consider using an image CDN like Cloudflare, Cloudinary, or Vercel Image Optimization
+- Generate responsive image sizes with `srcset`
+
+### Caching Strategy
+- Enable browser caching for static assets (1 year for hashed files)
+- Use CDN edge caching for pages
+- Implement stale-while-revalidate for dynamic content
+- Supabase storage buckets can use cache-control headers
+
+### Core Web Vitals Targets
+- LCP: < 2.5s (optimize hero image loading)
+- FID: < 100ms (defer non-critical JS)
+- CLS: < 0.1 (reserve space for images and fonts)
