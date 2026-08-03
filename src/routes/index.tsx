@@ -38,10 +38,10 @@ export const Route = createFileRoute("/")({
         content:
           "استكشف دول العالم، اقرأ معلومات السفر المجانية، احسب تكلفة رحلتك كاملة، واحصل على دليل سفر متكامل لأي دولة.",
       },
-      { property: "og:title", content: "Travel Smart Budget | سافر بذكاء" },
+      { property: "og:title", content: "Travel Smart Budget | اكتشف العالم واحسب ميزانية رحلتك كاملة" },
       {
         property: "og:description",
-        content: "اكتشف أين تذهب، وكم تحتاج، وكيف تستعد لرحلتك.",
+        content: "استكشف دول العالم، اقرأ معلومات السفر المجانية، احسب تكلفة رحلتك كاملة، واحصل على دليل سفر متكامل لأي دولة.",
       },
     ],
     links: [{ rel: "canonical", href: "/" }],

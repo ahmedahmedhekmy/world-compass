@@ -82,15 +82,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Travel Smart Budget — اكتشف العالم واحسب ميزانية رحلتك" },
+      { title: "Travel Smart Budget | اكتشف العالم واحسب ميزانية رحلتك كاملة" },
       {
         name: "description",
         content:
-          "منصة سفر عالمية: اكتشف الدول، اقرأ معلومات سفر مجانية، واحسب تكلفة رحلتك كاملة قبل الحجز.",
+          "استكشف دول العالم، اقرأ معلومات السفر المجانية، احسب تكلفة رحلتك كاملة، واحصل على دليل سفر متكامل لأي دولة.",
       },
       { property: "og:site_name", content: "Travel Smart Budget" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:title", content: "Travel Smart Budget | اكتشف العالم واحسب ميزانية رحلتك كاملة" },
+      { name: "twitter:title", content: "Travel Smart Budget | اكتشف العالم واحسب ميزانية رحلتك كاملة" },
+      { property: "og:description", content: "استكشف دول العالم، اقرأ معلومات السفر المجانية، احسب تكلفة رحلتك كاملة، واحصل على دليل سفر متكامل لأي دولة." },
+      { name: "twitter:description", content: "استكشف دول العالم، اقرأ معلومات السفر المجانية، احسب تكلفة رحلتك كاملة، واحصل على دليل سفر متكامل لأي دولة." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/5a6aedfb-d259-4a89-86bf-813f5adbf89f" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/5a6aedfb-d259-4a89-86bf-813f5adbf89f" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
