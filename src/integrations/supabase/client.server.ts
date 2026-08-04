@@ -33,6 +33,10 @@ function createSupabaseAdminClient() {
   const SUPABASE_URL = process.env.SUPABASE_URL;
   const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+  console.log('[Supabase] Initializing admin client...');
+  console.log('[Supabase] SUPABASE_URL:', SUPABASE_URL ? 'SET' : 'MISSING');
+  console.log('[Supabase] SUPABASE_SERVICE_ROLE_KEY:', SUPABASE_SERVICE_ROLE_KEY ? 'SET (length: ' + SUPABASE_SERVICE_ROLE_KEY.length + ')' : 'MISSING');
+
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
     const missing = [
       ...(!SUPABASE_URL ? ['SUPABASE_URL'] : []),
@@ -43,6 +47,8 @@ function createSupabaseAdminClient() {
     throw new Error(message);
   }
 
+  console.log('[Supabase] Creating admin client with URL:', SUPABASE_URL);
+  
   return createClient<Database>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
     global: {
       fetch: createSupabaseFetch(SUPABASE_SERVICE_ROLE_KEY),
