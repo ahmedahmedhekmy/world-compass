@@ -1,3 +1,9 @@
+/**
+ * Error reporting utility for client-side errors.
+ * Works with both Lovable Cloud (when available) and standard deployments (Vercel).
+ * On Vercel, errors are logged to console and can be sent to error tracking services like Sentry.
+ */
+
 type LovableErrorOptions = {
   mechanism?: "manual" | "onerror" | "unhandledrejection" | "react_error_boundary";
   handled?: boolean;
@@ -25,33 +31,47 @@ declare global {
 
 export function reportLovableError(error: unknown, context: Record<string, unknown> = {}) {
   if (typeof window === "undefined") return;
-  window.__lovableEvents?.captureException?.(
-    error,
-    {
-      source: "react_error_boundary",
-      route: window.location.pathname,
-      ...context,
-    },
-    {
-      mechanism: "react_error_boundary",
-      handled: false,
-      severity: "error",
-    },
-  );
-  // Prod React does not rethrow boundary-caught errors to window.onerror, so the
-  // editor's telemetry never sees them. Forward to lovable.js's reporting hook,
-  // which is present only inside the editor preview.
-  // Loaders and server fns commonly throw a raw Response; String(it) is the
-  // opaque "[object Response]", so pull out the status and URL instead.
+
+  // Try to report to Lovable if available (Lovable Cloud editor preview)
+  if (window.__lovableEvents) {
+    window.__lovableEvents.captureException?.(
+      error,
+      {
+        source: "react_error_boundary",
+        route: window.location.pathname,
+        ...context,
+      },
+      {
+        mechanism: "react_error_boundary",
+        handled: false,
+        severity: "error",
+      },
+    );
+  }
+
+  // Also log to console for Vercel deployments and debugging
   const message =
     error instanceof Response
       ? `Response ${error.status}${error.url ? ` at ${error.url}` : ""}`
       : error instanceof Error
         ? error.message
         : String(error);
+
+  const stack = error instanceof Error ? error.stack : undefined;
+
+  console.error(`[Error] ${message}`, {
+    route: typeof window !== "undefined" ? window.location.pathname : "unknown",
+    ...context,
+  });
+
+  if (stack) {
+    console.error(stack);
+  }
+
+  // Forward to Lovable reporter if available
   window.__lovableReportRuntimeError?.({
     message,
-    stack: error instanceof Error ? error.stack : undefined,
-    filename: window.location.pathname,
+    stack,
+    filename: typeof window !== "undefined" ? window.location.pathname : undefined,
   });
 }

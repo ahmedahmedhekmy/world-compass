@@ -1,7 +1,7 @@
 /**
  * Business configuration.
  * These defaults are read from a single place so they can later be served from
- * the admin dashboard (Lovable Cloud `pricing_settings` / `site_settings`)
+ * the admin dashboard (Supabase `pricing_settings` / `site_settings`)
  * without touching UI components.
  */
 export const site = {
