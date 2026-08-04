@@ -22,11 +22,12 @@ cp .env.example .env
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `PUBLIC_SITE_URL` | Production site URL | `https://travelsmartbudget.com` |
-| `PUBLIC_SUPABASE_URL` | Supabase project URL | `https://xxxxx.supabase.co` |
-| `PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous key | `eyJhbGci...` |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key | `eyJhbGci...` |
+| `SUPABASE_URL` | Supabase project URL (server-side) | `https://xxxxx.supabase.co` |
+| `VITE_SUPABASE_URL` | Supabase URL (client-side) | `https://xxxxx.supabase.co` |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | Supabase anonymous key | `eyJhbGci...` |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server-side only) | `eyJhbGci...` |
 | `STRIPE_SECRET_KEY` | Stripe secret key | `sk_live_...` |
-| `STRIPE_PUBLISHABLE_KEY` | Stripe publishable key | `pk_live_...` |
+| `VITE_STRIPE_PUBLISHABLE_KEY` | Stripe publishable key | `pk_live_...` |
 | `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret | `whsec_...` |
 
 ### Optional Variables
@@ -71,13 +72,20 @@ npx supabase db push
 
 ### Option 1: Vercel (Recommended)
 
-1. Connect GitHub repo to Vercel
-2. Add environment variables in Vercel dashboard
-3. Deploy
+1. Go to **Vercel Dashboard → Your Project → Settings → Environment Variables**
 
-```bash
-vercel deploy --prod
-```
+2. Add ALL required environment variables:
+   - `SUPABASE_URL` (Production, Preview, Development)
+   - `SUPABASE_SERVICE_ROLE_KEY` (Production, Preview, Development)
+   - `VITE_SUPABASE_URL` (Production, Preview, Development)
+   - `VITE_SUPABASE_PUBLISHABLE_KEY` (Production, Preview, Development)
+   - `STRIPE_SECRET_KEY` (Production, Preview)
+   - `VITE_STRIPE_PUBLISHABLE_KEY` (Production, Preview)
+   - `STRIPE_WEBHOOK_SECRET` (Production, Preview)
+
+3. Go to **Deployments** tab and click **Redeploy** (or push a commit to trigger auto-deploy)
+
+4. Verify the deployment URL loads correctly
 
 ### Option 2: Docker
 
