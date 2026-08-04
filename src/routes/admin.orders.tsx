@@ -11,6 +11,13 @@ export const Route = createFileRoute("/admin/orders")({
 
 const STATUSES = ["pending", "paid", "cancelled", "refunded"] as const;
 
+const STATUS_LABELS: Record<string, string> = {
+  pending: "قيد الانتظار",
+  paid: "مدفوع",
+  cancelled: "ملغي",
+  refunded: "مسترجع",
+};
+
 function AdminOrders() {
   const qc = useQueryClient();
   const { data: orders } = useQuery({
@@ -59,7 +66,16 @@ function AdminOrders() {
                   {o.country_slug ? ` · ${o.country_slug}` : ""}
                 </td>
                 <td className="p-3">{formatUSD(Number(o.amount_usd))}</td>
-                <td className="p-3">{o.status}</td>
+                <td className="p-3">
+                  <span className={`rounded-full px-2 py-1 text-xs ${
+                    o.status === "paid" ? "bg-green-100 text-green-800" :
+                    o.status === "pending" ? "bg-yellow-100 text-yellow-800" :
+                    o.status === "cancelled" ? "bg-gray-100 text-gray-800" :
+                    "bg-red-100 text-red-800"
+                  }`}>
+                    {STATUS_LABELS[o.status] ?? o.status}
+                  </span>
+                </td>
                 <td className="p-3">
                   <select
                     className="rounded-lg border border-border bg-background px-2 py-1 text-xs"
@@ -68,7 +84,7 @@ function AdminOrders() {
                   >
                     {STATUSES.map((s) => (
                       <option key={s} value={s}>
-                        {s}
+                        {STATUS_LABELS[s]}
                       </option>
                     ))}
                   </select>

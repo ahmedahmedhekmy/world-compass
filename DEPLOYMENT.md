@@ -1,0 +1,145 @@
+# Production Deployment Guide
+
+This guide walks through deploying Travel Smart Budget to production.
+
+## Prerequisites
+
+1. Node.js 18+ installed
+2. A Supabase project created
+3. A Stripe account (for payments)
+4. Domain configured (optional)
+
+## Environment Variables
+
+Copy `.env.example` to `.env` and configure:
+
+```bash
+cp .env.example .env
+```
+
+### Required Variables
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `PUBLIC_SITE_URL` | Production site URL | `https://travelsmartbudget.com` |
+| `PUBLIC_SUPABASE_URL` | Supabase project URL | `https://xxxxx.supabase.co` |
+| `PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous key | `eyJhbGci...` |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key | `eyJhbGci...` |
+| `STRIPE_SECRET_KEY` | Stripe secret key | `sk_live_...` |
+| `STRIPE_PUBLISHABLE_KEY` | Stripe publishable key | `pk_live_...` |
+| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret | `whsec_...` |
+
+### Optional Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `STRIPE_PRICE_ID_GUIDE` | Stripe price ID for travel guide | - |
+| `STRIPE_PRICE_ID_PLANNING` | Stripe price ID for planning service | - |
+| `EMAIL_ENABLED` | Enable email sending | `false` |
+| `EMAIL_HOST` | SMTP host | - |
+| `EMAIL_PORT` | SMTP port | - |
+| `EMAIL_USER` | SMTP username | - |
+| `EMAIL_PASS` | SMTP password | - |
+
+## Database Setup
+
+1. Run the Stripe migration:
+```bash
+npx supabase db push
+```
+
+2. Or manually apply `supabase/migrations/20260803230000_add_stripe_fields.sql`
+
+## Stripe Configuration
+
+1. Go to [Stripe Dashboard](https://dashboard.stripe.com)
+2. Create products and prices for:
+   - Travel Guide (one-time, $19)
+   - Travel Planning (one-time, $49)
+
+3. Copy the Price IDs to your environment:
+   ```
+   STRIPE_PRICE_ID_GUIDE=price_xxx
+   STRIPE_PRICE_ID_PLANNING=price_xxx
+   ```
+
+4. Set up webhook endpoint:
+   - URL: `https://your-domain/api/stripe-webhook`
+   - Events: `checkout.session.completed`, `payment_intent.payment_failed`
+
+## Deployment
+
+### Option 1: Vercel (Recommended)
+
+1. Connect GitHub repo to Vercel
+2. Add environment variables in Vercel dashboard
+3. Deploy
+
+```bash
+vercel deploy --prod
+```
+
+### Option 2: Docker
+
+```bash
+docker build -t travel-smart-budget .
+docker run -p 3000:3000 --env-file .env travel-smart-budget
+```
+
+### Option 3: Manual
+
+```bash
+npm install
+npm run build
+npm start
+```
+
+## Post-Deployment Checklist
+
+- [ ] Verify sitemap.xml loads correctly
+- [ ] Test checkout flow (use Stripe test mode first)
+- [ ] Check admin dashboard functionality
+- [ ] Test mobile responsiveness
+- [ ] Verify SSL certificate
+- [ ] Set up monitoring (Sentry, LogRocket, etc.)
+- [ ] Configure CDN caching rules
+- [ ] Test email notifications (if enabled)
+- [ ] Configure robots.txt via hosting platform (Vercel, Netlify, or CDN)
+
+## Monitoring
+
+### Error Tracking
+Recommended: [Sentry](https://sentry.io)
+
+```bash
+npm install @sentry/react
+```
+
+### Analytics
+- Google Analytics 4
+- Google Tag Manager
+- Custom analytics via Supabase
+
+### Uptime Monitoring
+Recommended services:
+- UptimeRobot
+- Pingdom
+- Grafana + Prometheus
+
+## Security Checklist
+
+- [ ] All environment variables are set (no defaults in production)
+- [ ] Stripe is in live mode (not test mode)
+- [ ] Supabase Row Level Security is enabled
+- [ ] Admin routes are protected
+- [ ] HTTPS is enforced
+- [ ] CSP headers configured
+- [ ] Rate limiting is enabled
+
+## Support
+
+For issues, check:
+1. Supabase Dashboard > Logs
+2. Vercel Deployment Logs
+3. Stripe Dashboard > Webhooks > Failed events
+4. Application server logs

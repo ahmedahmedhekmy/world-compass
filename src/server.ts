@@ -2,6 +2,19 @@ import "./lib/error-capture";
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
+import { validateServerEnv } from "./lib/env";
+
+// Validate environment at startup (only in production)
+if (process.env.NODE_ENV === "production") {
+  const envResult = validateServerEnv();
+  if (!envResult.valid) {
+    console.error("[Env] Missing required environment variables:", envResult.missing.join(", "));
+    console.error("[Env] Please set these before deploying to production.");
+  }
+  if (envResult.warnings.length > 0) {
+    console.warn("[Env] Warnings:", envResult.warnings.join("\n"));
+  }
+}
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;

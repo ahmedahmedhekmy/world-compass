@@ -51,7 +51,9 @@ export const Route = createFileRoute("/guides/$slug")({
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:type", content: "product" },
+        { property: "og:url", content: `/guides/${c.slug}` },
       ],
+      links: [{ rel: "canonical", href: `/guides/${c.slug}` }],
     };
   },
   component: GuidePage,

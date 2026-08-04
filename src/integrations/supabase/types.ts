@@ -446,11 +446,13 @@ export type Database = {
           email: string
           full_name: string | null
           id: string
+          paid_at: string | null
           product_type: string
           provider: string | null
           provider_ref: string | null
           reference: string
           status: string
+          stripe_session_id: string | null
           updated_at: string
           user_id: string | null
         }
@@ -463,11 +465,13 @@ export type Database = {
           email: string
           full_name?: string | null
           id?: string
+          paid_at?: string | null
           product_type: string
           provider?: string | null
           provider_ref?: string | null
           reference: string
           status?: string
+          stripe_session_id?: string | null
           updated_at?: string
           user_id?: string | null
         }
@@ -480,11 +484,13 @@ export type Database = {
           email?: string
           full_name?: string | null
           id?: string
+          paid_at?: string | null
           product_type?: string
           provider?: string | null
           provider_ref?: string | null
           reference?: string
           status?: string
+          stripe_session_id?: string | null
           updated_at?: string
           user_id?: string | null
         }

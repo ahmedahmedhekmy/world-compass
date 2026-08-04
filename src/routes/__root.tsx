@@ -16,6 +16,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/sonner";
 import { AnalyticsTracker } from "@/components/analytics-tracker";
 import { WhatsAppButton } from "@/components/whatsapp-button";
+import { CookieConsent } from "@/components/cookie-consent";
 
 import { LanguageProvider } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
@@ -156,6 +157,7 @@ function RootComponent() {
         <Toaster position="top-center" richColors />
         <AnalyticsTracker />
         <WhatsAppButton />
+        <CookieConsent />
       </LanguageProvider>
 
     </QueryClientProvider>

@@ -40,6 +40,7 @@ function Checkout() {
   const place = useServerFn(createOrder);
   const [busy, setBusy] = useState(false);
   const [reference, setReference] = useState<string | null>(null);
+  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
 
   const c = country ? countryBySlug(country) : undefined;
   const isGuide = product === "guide";
@@ -63,6 +64,12 @@ function Checkout() {
         },
       });
       setReference(res.reference);
+      if (res.checkoutUrl) {
+        setCheckoutUrl(res.checkoutUrl);
+        // Redirect to Stripe checkout
+        window.location.href = res.checkoutUrl;
+        return;
+      }
       toast.success("تم إنشاء طلبك بنجاح");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "تعذّر إنشاء الطلب");
@@ -87,10 +94,16 @@ function Checkout() {
       {reference ? (
         <div className="mt-6 rounded-3xl bg-secondary p-6 text-sm leading-7">
           <p className="font-bold">تم تسجيل طلبك برقم {reference}</p>
-          <p className="mt-2 text-muted-foreground">
-            أرسلنا تأكيدًا إلى بريدك، وسنزوّدك بتعليمات إتمام الدفع. بعد تأكيد الدفع سيظهر المنتج
-            مباشرة داخل حسابك.
-          </p>
+          {checkoutUrl ? (
+            <p className="mt-2 text-muted-foreground">
+              تم توجيهك إلى صفحة الدفع. بعد تأكيد الدفع سيظهر المنتج مباشرة داخل حسابك.
+            </p>
+          ) : (
+            <p className="mt-2 text-muted-foreground">
+              أرسلنا تأكيدًا إلى بريدك، وسنزوّدك بتعليمات إتمام الدفع. بعد تأكيد الدفع سيظهر المنتج
+              مباشرة داخل حسابك.
+            </p>
+          )}
           <div className="mt-4 flex flex-wrap gap-3">
             <Button asChild variant="hero">
               <Link to="/account">اذهب إلى حسابي</Link>
@@ -101,6 +114,14 @@ function Checkout() {
               </a>
             </Button>
           </div>
+        </div>
+      ) : busy ? (
+        <div className="mt-6 animate-pulse space-y-4 rounded-3xl border border-border p-6">
+          <div className="h-6 w-32 rounded bg-secondary" />
+          <div className="h-10 w-full rounded bg-secondary" />
+          <div className="h-10 w-full rounded bg-secondary" />
+          <div className="h-24 w-full rounded bg-secondary" />
+          <div className="h-12 w-32 rounded bg-secondary" />
         </div>
       ) : (
         <form onSubmit={onSubmit} className="mt-6 grid gap-4 rounded-3xl border border-border p-6">
@@ -117,11 +138,10 @@ function Checkout() {
             <Input id="notes" name="notes" />
           </div>
           <Button type="submit" variant="hero" disabled={busy}>
-            {busy ? "جارٍ إنشاء الطلب…" : "تأكيد الطلب"}
+            {busy ? "جارٍ إنشاء الطلب…" : "الدفع الآن"}
           </Button>
           <p className="text-xs leading-6 text-muted-foreground">
-            الدفع الإلكتروني قيد التفعيل حاليًا. عند تأكيد الطلب يتم تسجيله برقم خاص بك، ونرسل لك
-            تعليمات إتمام الدفع بالبريد.
+            الدفع آمن عبر Stripe. عند تأكيد الطلب يتم تسجيله برقم خاص بك، ويمكنك إتمام الدفع مباشرة.
           </p>
         </form>
       )}

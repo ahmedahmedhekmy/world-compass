@@ -2,8 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { continents, countries } from "@/data/countries";
 
-// TODO: replace with your project URL once a project name or custom domain is set.
-const BASE_URL = "";
+// Production URL - must be set via environment variable
+const BASE_URL = process.env.PUBLIC_SITE_URL ?? "";
+
+if (!BASE_URL && process.env.NODE_ENV === "production") {
+  console.warn("[Sitemap] PUBLIC_SITE_URL not set - sitemap URLs will be invalid");
+}
 
 interface SitemapEntry {
   path: string;
