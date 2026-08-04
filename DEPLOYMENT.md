@@ -72,6 +72,9 @@ npx supabase db push
 
 ### Option 1: Vercel (Recommended)
 
+**IMPORTANT**: The project now builds for Vercel (was previously Cloudflare Workers).
+You must REDEPLOY after pulling these changes.
+
 1. Go to **Vercel Dashboard → Your Project → Settings → Environment Variables**
 
 2. Add ALL required environment variables:
@@ -83,9 +86,14 @@ npx supabase db push
    - `VITE_STRIPE_PUBLISHABLE_KEY` (Production, Preview)
    - `STRIPE_WEBHOOK_SECRET` (Production, Preview)
 
-3. Go to **Deployments** tab and click **Redeploy** (or push a commit to trigger auto-deploy)
+3. Go to **Deployments** tab and click **Redeploy**
 
-4. Verify the deployment URL loads correctly
+4. Check **Vercel Runtime Logs** (in deployment details) for:
+   - `[Supabase] Initializing admin client...`
+   - `[Leads] subscribeNewsletter called with:...`
+   - Any error messages
+
+5. Test newsletter subscription, booking request, and order creation
 
 ### Option 2: Docker
 
