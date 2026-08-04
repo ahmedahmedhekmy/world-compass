@@ -49,6 +49,7 @@ export async function createCheckoutSession({
   customerEmail,
   reference,
 }: CreateCheckoutSessionParams): Promise<{ url: string; sessionId: string } | null> {
+  const stripe = getStripe();
   if (!stripe) {
     console.warn("[Stripe] Not configured - set STRIPE_SECRET_KEY environment variable");
     return null;
@@ -97,6 +98,7 @@ export async function handleStripeWebhook(
   payload: string,
   signature: string
 ): Promise<{ success: boolean; message: string }> {
+  const stripe = getStripe();
   if (!stripe) {
     return { success: false, message: "Stripe not configured" };
   }
@@ -176,6 +178,7 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
  * Creates a Stripe customer portal session for managing subscriptions/billing.
  */
 export async function createPortalSession(customerId: string): Promise<string | null> {
+  const stripe = getStripe();
   if (!stripe) return null;
   
   const siteUrl = process.env.PUBLIC_SITE_URL ?? "http://localhost:5173";
