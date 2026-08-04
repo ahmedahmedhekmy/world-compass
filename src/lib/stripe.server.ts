@@ -10,12 +10,17 @@
 
 import Stripe from "stripe";
 
-// Initialize Stripe only if credentials are available
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+// Env injection happens at request time, so the key must be read lazily.
+let _stripe: Stripe | null | undefined;
 
-export const stripe = stripeSecretKey
-  ? new Stripe(stripeSecretKey)
-  : null;
+export function getStripe(): Stripe | null {
+  if (_stripe === undefined) {
+    const key = process.env.STRIPE_SECRET_KEY;
+    _stripe = key ? new Stripe(key) : null;
+  }
+  return _stripe;
+}
+
 
 /**
  * Check if Stripe is properly configured with API keys.
