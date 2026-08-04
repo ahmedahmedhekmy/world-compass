@@ -166,7 +166,7 @@ export const createOrder = createServerFn({ method: "POST" })
       stripe_session_id: null,
       paid_at: null,
       currency: "USD",
-    } as never);
+    });
     if (error) throw new Error("تعذّر إنشاء الطلب، حاول مرة أخرى.");
 
     // Try to create Stripe checkout session if configured
