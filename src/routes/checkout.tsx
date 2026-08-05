@@ -103,11 +103,22 @@ function Checkout() {
               تم توجيهك إلى صفحة الدفع. بعد تأكيد الدفع سيظهر المنتج مباشرة داخل حسابك.
             </p>
           ) : (
-            <p className="mt-2 text-muted-foreground">
-              أرسلنا تأكيدًا إلى بريدك، وسنزوّدك بتعليمات إتمام الدفع. بعد تأكيد الدفع سيظهر المنتج
-              مباشرة داخل حسابك.
-            </p>
+            <div className="mt-2 grid gap-2 text-muted-foreground">
+              <p>
+                {emailSent
+                  ? "أرسلنا تأكيدًا إلى بريدك يتضمن رقم طلبك."
+                  : "احتفظ برقم الطلب أعلاه — لم يتم إرسال بريد تأكيد، والتواصل سيتم يدويًا."}
+              </p>
+              <p>
+                لإتمام الدفع، راسلنا على{" "}
+                <a className="text-primary underline" href={`mailto:${contact.email}`}>
+                  {contact.email}
+                </a>{" "}
+                مع ذكر رقم الطلب، وسنرسل لك تعليمات الدفع. بعد تأكيد الدفع يُفعّل المنتج داخل حسابك.
+              </p>
+            </div>
           )}
+
           <div className="mt-4 flex flex-wrap gap-3">
             <Button asChild variant="hero">
               <Link to="/account">اذهب إلى حسابي</Link>
