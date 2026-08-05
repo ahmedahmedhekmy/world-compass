@@ -41,6 +41,8 @@ function Checkout() {
   const [busy, setBusy] = useState(false);
   const [reference, setReference] = useState<string | null>(null);
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
+  const [emailSent, setEmailSent] = useState(false);
+
 
   const c = country ? countryBySlug(country) : undefined;
   const isGuide = product === "guide";
@@ -64,13 +66,15 @@ function Checkout() {
         },
       });
       setReference(res.reference);
+      setEmailSent(Boolean(res.emailSent));
       if (res.checkoutUrl) {
         setCheckoutUrl(res.checkoutUrl);
         // Redirect to Stripe checkout
         window.location.href = res.checkoutUrl;
         return;
       }
-      toast.success("تم إنشاء طلبك بنجاح");
+      toast.success("تم تسجيل طلبك بنجاح");
+
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "تعذّر إنشاء الطلب");
     } finally {
@@ -99,11 +103,22 @@ function Checkout() {
               تم توجيهك إلى صفحة الدفع. بعد تأكيد الدفع سيظهر المنتج مباشرة داخل حسابك.
             </p>
           ) : (
-            <p className="mt-2 text-muted-foreground">
-              أرسلنا تأكيدًا إلى بريدك، وسنزوّدك بتعليمات إتمام الدفع. بعد تأكيد الدفع سيظهر المنتج
-              مباشرة داخل حسابك.
-            </p>
+            <div className="mt-2 grid gap-2 text-muted-foreground">
+              <p>
+                {emailSent
+                  ? "أرسلنا تأكيدًا إلى بريدك يتضمن رقم طلبك."
+                  : "احتفظ برقم الطلب أعلاه — لم يتم إرسال بريد تأكيد، والتواصل سيتم يدويًا."}
+              </p>
+              <p>
+                لإتمام الدفع، راسلنا على{" "}
+                <a className="text-primary underline" href={`mailto:${contact.email}`}>
+                  {contact.email}
+                </a>{" "}
+                مع ذكر رقم الطلب، وسنرسل لك تعليمات الدفع. بعد تأكيد الدفع يُفعّل المنتج داخل حسابك.
+              </p>
+            </div>
           )}
+
           <div className="mt-4 flex flex-wrap gap-3">
             <Button asChild variant="hero">
               <Link to="/account">اذهب إلى حسابي</Link>
@@ -141,7 +156,7 @@ function Checkout() {
             {busy ? "جارٍ إنشاء الطلب…" : "الدفع الآن"}
           </Button>
           <p className="text-xs leading-6 text-muted-foreground">
-            الدفع آمن عبر Stripe. عند تأكيد الطلب يتم تسجيله برقم خاص بك، ويمكنك إتمام الدفع مباشرة.
+            عند تأكيد الطلب يتم تسجيله برقم مرجعي خاص بك، ثم نوجّهك إلى صفحة الدفع الآمنة أو نزوّدك بتعليمات الدفع اليدوي.
           </p>
         </form>
       )}
@@ -150,7 +165,7 @@ function Checkout() {
         <h2 className="text-sm font-extrabold">ماذا يحدث بعد الطلب؟</h2>
         <ol className="mt-4 grid gap-3 text-sm text-muted-foreground">
           {[
-            "نسجّل طلبك برقم مرجعي خاص بك ونرسله إلى بريدك.",
+            "نسجّل طلبك برقم مرجعي خاص بك يظهر لك فورًا على الشاشة.",
             isGuide
               ? "بعد تأكيد الدفع يُفعّل الدليل مباشرة داخل «حسابي» ويمكنك فتحه أو تحميله في أي وقت."
               : "بعد تأكيد الدفع يتواصل معك فريق التخطيط خلال 24 ساعة لبدء تفاصيل رحلتك.",

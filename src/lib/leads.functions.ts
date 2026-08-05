@@ -225,11 +225,18 @@ export const createOrder = createServerFn({ method: "POST" })
       ["المبلغ", `${amount} USD`],
       ...(checkoutUrl ? ([["رابط الدفع", checkoutUrl]] as [string, unknown][]) : []),
     ]);
-    await sendCustomerEmail(
+    const customerEmail = await sendCustomerEmail(
       data.email,
       `تأكيد الطلب ${reference} | Travel Smart Budget`,
       `<p>مرحبًا ${data.full_name}،</p><p>تم إنشاء طلبك برقم <b>${reference}</b> بقيمة ${amount} دولارًا.</p>${checkoutUrl ? `<p>أكمل الدفع من هنا: <a href="${checkoutUrl}">الدفع الآن</a></p>` : "<p>سنرسل لك تعليمات إتمام الدفع خلال وقت قصير.</p>"}`,
     );
 
-    return { ok: true, reference, amount, checkoutUrl };
+    return {
+      ok: true,
+      reference,
+      amount,
+      checkoutUrl,
+      emailSent: Boolean(customerEmail.sent),
+      paymentMode: checkoutUrl ? ("stripe" as const) : ("manual" as const),
+    };
   });
