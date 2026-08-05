@@ -75,6 +75,26 @@ npx supabase db push
 **IMPORTANT**: The project now builds for Vercel (was previously Cloudflare Workers).
 You must REDEPLOY after pulling these changes.
 
+#### Step 1: Apply Database Migrations
+
+⚠️ **CRITICAL**: The `orders` and `newsletter_subscribers` tables are missing from your Supabase database!
+
+**Option A: Apply via Supabase Dashboard (Recommended)**
+
+1. Go to **Supabase Dashboard → Your Project → SQL Editor**
+2. Copy the contents of `supabase/migrations/20260804000000_create_missing_tables.sql`
+3. Click **Run** to execute
+
+**Option B: Apply via Supabase CLI**
+
+```bash
+npx supabase login
+npx supabase link --project-ref <your-project-ref>
+npx supabase db push
+```
+
+#### Step 2: Set Environment Variables
+
 1. Go to **Vercel Dashboard → Your Project → Settings → Environment Variables**
 
 2. Add ALL required environment variables:
@@ -85,6 +105,8 @@ You must REDEPLOY after pulling these changes.
    - `STRIPE_SECRET_KEY` (Production, Preview)
    - `VITE_STRIPE_PUBLISHABLE_KEY` (Production, Preview)
    - `STRIPE_WEBHOOK_SECRET` (Production, Preview)
+
+#### Step 3: Redeploy
 
 3. Go to **Deployments** tab and click **Redeploy**
 
