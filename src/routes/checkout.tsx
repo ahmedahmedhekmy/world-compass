@@ -41,6 +41,8 @@ function Checkout() {
   const [busy, setBusy] = useState(false);
   const [reference, setReference] = useState<string | null>(null);
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
+  const [emailSent, setEmailSent] = useState(false);
+
 
   const c = country ? countryBySlug(country) : undefined;
   const isGuide = product === "guide";
