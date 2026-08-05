@@ -114,7 +114,7 @@ function GuidePage() {
             </div>
             <p className="mt-2 text-sm leading-7 text-muted-foreground">
               يُفتح محتوى الدليل بعد إتمام عملية الشراء، ولا يُعرض في الصفحات العامة. سيتم إنشاء رقم
-              طلب خاص بك على شكل TSB-GUIDE-2026-XXXX ويصلك تأكيد بالبريد الإلكتروني.
+              طلب خاص بك على شكل TSB-GUIDE-2026-XXXX يظهر لك مباشرة بعد إتمام الطلب.
             </p>
           </div>
 
