@@ -66,13 +66,15 @@ function Checkout() {
         },
       });
       setReference(res.reference);
+      setEmailSent(Boolean(res.emailSent));
       if (res.checkoutUrl) {
         setCheckoutUrl(res.checkoutUrl);
         // Redirect to Stripe checkout
         window.location.href = res.checkoutUrl;
         return;
       }
-      toast.success("تم إنشاء طلبك بنجاح");
+      toast.success("تم تسجيل طلبك بنجاح");
+
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "تعذّر إنشاء الطلب");
     } finally {
