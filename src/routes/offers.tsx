@@ -15,6 +15,7 @@ import { formatUSD } from "@/config/site";
 
 export const Route = createFileRoute("/offers")({
   head: () => ({
+    links: [{ rel: "canonical", href: "/offers" }],
     meta: [
       { title: "عروض السفر الأسبوعية | Travel Smart Budget" },
       {

@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button";
 import { formatUSD } from "@/config/site";
 import { countryBySlug } from "@/data/countries";
 import { useFavorites, readRecentCountries } from "@/lib/favorites";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 
 export const Route = createFileRoute("/account")({
@@ -68,6 +71,8 @@ function AccountPage() {
           </Button>
         </div>
       </div>
+
+      <ProfileEditor userId={user.id} />
 
       <h2 className="mt-10 text-lg font-bold">أدلتي</h2>
       {paidGuides.length === 0 ? (
@@ -179,5 +184,104 @@ function SavedDestinations() {
 export function statusAr(status: string) {
   return (
     { pending: "بانتظار الدفع", paid: "مدفوع", cancelled: "ملغي", refunded: "مسترجع" }[status] ?? status
+  );
+}
+
+/** Lets the signed-in customer keep their contact details up to date. */
+function ProfileEditor({ userId }: { userId: string }) {
+  const [busy, setBusy] = useState(false);
+  const [form, setForm] = useState({ full_name: "", phone: "", country: "", preferred_language: "ar" });
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    supabase
+      .from("profiles")
+      .select("full_name, phone, country, preferred_language")
+      .eq("id", userId)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!active) return;
+        if (data) {
+          setForm({
+            full_name: data.full_name ?? "",
+            phone: data.phone ?? "",
+            country: data.country ?? "",
+            preferred_language: data.preferred_language ?? "ar",
+          });
+        }
+        setLoaded(true);
+      });
+    return () => {
+      active = false;
+    };
+  }, [userId]);
+
+  async function save(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        full_name: form.full_name || null,
+        phone: form.phone || null,
+        country: form.country || null,
+        preferred_language: form.preferred_language,
+      })
+      .eq("id", userId);
+    setBusy(false);
+    if (error) toast.error("تعذّر حفظ البيانات");
+    else toast.success("تم حفظ بياناتك");
+  }
+
+  return (
+    <section className="mt-10">
+      <h2 className="text-lg font-bold">بياناتي</h2>
+      <form onSubmit={save} className="mt-3 grid gap-4 rounded-3xl border border-border p-6 sm:grid-cols-2">
+        <div className="grid gap-2">
+          <Label htmlFor="p-name">الاسم الكامل</Label>
+          <Input
+            id="p-name"
+            value={form.full_name}
+            disabled={!loaded}
+            onChange={(e) => setForm({ ...form, full_name: e.target.value })}
+          />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="p-phone">رقم الجوال</Label>
+          <Input
+            id="p-phone"
+            value={form.phone}
+            disabled={!loaded}
+            onChange={(e) => setForm({ ...form, phone: e.target.value })}
+          />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="p-country">بلد الإقامة</Label>
+          <Input
+            id="p-country"
+            value={form.country}
+            disabled={!loaded}
+            onChange={(e) => setForm({ ...form, country: e.target.value })}
+          />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="p-lang">لغة التواصل</Label>
+          <select
+            id="p-lang"
+            className="h-10 rounded-xl border border-border bg-background px-3 text-sm"
+            value={form.preferred_language}
+            disabled={!loaded}
+            onChange={(e) => setForm({ ...form, preferred_language: e.target.value })}
+          >
+            <option value="ar">العربية</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+        <Button type="submit" variant="hero" className="w-fit sm:col-span-2" disabled={busy || !loaded}>
+          {busy ? "جارٍ الحفظ…" : "حفظ البيانات"}
+        </Button>
+      </form>
+    </section>
   );
 }

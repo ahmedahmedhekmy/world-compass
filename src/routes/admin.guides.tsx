@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -69,6 +69,19 @@ function AdminGuides() {
     if (error) return toast.error("تعذّر الحفظ");
     toast.success("تم الحفظ");
     qc.invalidateQueries({ queryKey: ["admin-guides"] });
+  }
+
+  async function openPdf(pdfUrl: string) {
+    if (/^https?:\/\//.test(pdfUrl)) {
+      window.open(pdfUrl, "_blank", "noopener");
+      return;
+    }
+    const { data, error } = await supabase.storage.from("guides").createSignedUrl(pdfUrl, 300);
+    if (error || !data) {
+      toast.error("تعذّر فتح الملف");
+      return;
+    }
+    window.open(data.signedUrl, "_blank", "noopener");
   }
 
   async function remove(id: string) {
@@ -145,6 +158,16 @@ function AdminGuides() {
                   </Button>
                   <Button variant="outline" size="sm" onClick={() => save(g.id, { published: !g.published })}>
                     {g.published ? "إلغاء النشر" : "نشر"}
+                  </Button>
+                  {g.pdf_url && (
+                    <Button variant="outline" size="sm" onClick={() => void openPdf(g.pdf_url!)}>
+                      فتح/تحميل PDF
+                    </Button>
+                  )}
+                  <Button asChild variant="outline" size="sm">
+                    <Link to="/guides/$slug" params={{ slug: g.country_slug }} target="_blank">
+                      معاينة كما يراها العميل
+                    </Link>
                   </Button>
                   <Button variant="outline" size="sm" onClick={() => remove(g.id)}>
                     حذف

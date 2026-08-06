@@ -9,7 +9,6 @@ interface Testimonial {
   rating: number;
   comment: string;
   photo_url: string | null;
-  is_demo: boolean;
 }
 
 function Stars({ rating }: { rating: number }) {
@@ -35,7 +34,7 @@ export function Testimonials() {
     queryFn: async () => {
       const { data } = await supabase
         .from("testimonials")
-        .select("id, name, country, rating, comment, photo_url, is_demo")
+        .select("id, name, country, rating, comment, photo_url")
         .eq("published", true)
         .order("sort_order", { ascending: true });
       return (data ?? []) as Testimonial[];
@@ -68,16 +67,10 @@ export function Testimonials() {
   }
 
   if (items.length === 0) return null;
-  const anyDemo = items.some((t) => t.is_demo);
 
   return (
     <section className="container-page py-16">
       <h2 className="text-2xl font-black sm:text-3xl">آراء المسافرين</h2>
-      {anyDemo && (
-        <p className="mt-2 text-xs text-muted-foreground">
-          بعض الآراء المعروضة هي نماذج توضيحية مؤقتة لعرض شكل القسم.
-        </p>
-      )}
       <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {items.map((t) => (
           <figure key={t.id} className="flex h-full flex-col rounded-3xl border border-border p-5">
@@ -107,11 +100,6 @@ export function Testimonials() {
                 )}
               </span>
             </figcaption>
-            {t.is_demo && (
-              <span className="mt-3 w-fit rounded-full bg-secondary px-2 py-0.5 text-[10px] text-muted-foreground">
-                نموذج توضيحي
-              </span>
-            )}
           </figure>
         ))}
       </div>

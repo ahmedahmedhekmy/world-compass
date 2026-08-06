@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { formatUSD } from "@/config/site";
+import { Button } from "@/components/ui/button";
+import { downloadCsv } from "@/lib/export-csv";
 
 export const Route = createFileRoute("/admin/customers")({
   component: AdminCustomers,
@@ -62,7 +64,40 @@ function AdminCustomers() {
 
   return (
     <>
-      <h1 className="text-2xl font-extrabold">العملاء</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-2xl font-extrabold">العملاء</h1>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={customers.length === 0}
+            onClick={() =>
+              downloadCsv(
+                "customers",
+                customers.map(([email, v]) => ({
+                  email,
+                  name: v.name,
+                  orders: v.orders,
+                  paid_orders: v.paid,
+                  total_spend_usd: v.spend,
+                  guides: v.guides.join(" | "),
+                  last_order: v.last,
+                })),
+              )
+            }
+          >
+            تصدير العملاء
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={(data?.subs ?? []).length === 0}
+            onClick={() => downloadCsv("newsletter", data?.subs ?? [])}
+          >
+            تصدير النشرة
+          </Button>
+        </div>
+      </div>
       <p className="mt-2 text-sm text-muted-foreground">
         {customers.length} عميل · {data?.subs.length ?? 0} مشترك في النشرة
       </p>

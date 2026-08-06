@@ -21,6 +21,7 @@ import {
 
 export const Route = createFileRoute("/calculator")({
   head: () => ({
+    links: [{ rel: "canonical", href: "/calculator" }],
     meta: [
       { title: "حاسبة تكلفة الرحلة المجانية | Travel Smart Budget" },
       {

@@ -11,7 +11,6 @@ const subscribeSchema = z.object({
 export const subscribeNewsletter = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => subscribeSchema.parse(d))
   .handler(async ({ data }) => {
-    console.log('[Content] subscribeNewsletter called with:', data);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin
       .from("newsletter_subscribers")
@@ -19,7 +18,6 @@ export const subscribeNewsletter = createServerFn({ method: "POST" })
         { email: data.email.toLowerCase(), language: data.language, source: data.source ?? null },
         { onConflict: "email" },
       );
-    console.log('[Content] newsletter_subscribers upsert result:', error ? { error: error.message, details: error.details, hint: error.hint } : 'success');
     if (error) {
       console.error('[Content] Failed to subscribe:', error);
       throw new Error("تعذّر الاشتراك، حاول مرة أخرى.");

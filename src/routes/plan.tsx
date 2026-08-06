@@ -5,6 +5,7 @@ import { useSiteSettings } from "@/lib/site-settings";
 
 export const Route = createFileRoute("/plan")({
   head: () => ({
+    links: [{ rel: "canonical", href: "/plan" }],
     meta: [
       { title: "خدمة تخطيط رحلة مخصصة | Travel Smart Budget" },
       {

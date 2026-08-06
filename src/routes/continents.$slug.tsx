@@ -17,11 +17,14 @@ export const Route = createFileRoute("/continents/$slug")({
     const c = loaderData.continent;
     const title = `السفر إلى ${c.ar} | وجهات ومعلومات`;
     return {
+      links: [{ rel: "canonical", href: `/continents/${c.slug}` }],
       meta: [
         { title },
         { name: "description", content: c.intro },
         { property: "og:title", content: title },
         { property: "og:description", content: c.intro },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary_large_image" },
       ],
     };
   },

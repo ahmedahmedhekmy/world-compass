@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { downloadCsv } from "@/lib/export-csv";
 
 export const Route = createFileRoute("/admin/requests")({
   component: AdminRequests,
@@ -37,7 +39,35 @@ function AdminRequests() {
 
   return (
     <>
-      <h1 className="text-2xl font-extrabold">طلبات التخطيط والحجز</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-2xl font-extrabold">طلبات التخطيط والحجز</h1>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={(data?.trips ?? []).length === 0}
+            onClick={() => downloadCsv("trip-requests", data?.trips ?? [])}
+          >
+            تصدير طلبات التخطيط
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={(data?.bookings ?? []).length === 0}
+            onClick={() => downloadCsv("booking-requests", data?.bookings ?? [])}
+          >
+            تصدير طلبات الحجز
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={(data?.messages ?? []).length === 0}
+            onClick={() => downloadCsv("messages", data?.messages ?? [])}
+          >
+            تصدير الرسائل
+          </Button>
+        </div>
+      </div>
 
       <h2 className="mt-8 text-lg font-bold">طلبات التقدير والتخطيط</h2>
       <div className="mt-3 grid gap-3">

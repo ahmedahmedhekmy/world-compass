@@ -3,6 +3,7 @@ import { site } from "@/config/site";
 
 export const Route = createFileRoute("/refund")({
   head: () => ({
+    links: [{ rel: "canonical", href: "/refund" }],
     meta: [
       { title: "سياسة الاسترجاع | Travel Smart Budget" },
       {
