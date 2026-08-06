@@ -9,7 +9,6 @@ interface Testimonial {
   rating: number;
   comment: string;
   photo_url: string | null;
-  is_demo: boolean;
 }
 
 function Stars({ rating }: { rating: number }) {
@@ -35,7 +34,7 @@ export function Testimonials() {
     queryFn: async () => {
       const { data } = await supabase
         .from("testimonials")
-        .select("id, name, country, rating, comment, photo_url, is_demo")
+        .select("id, name, country, rating, comment, photo_url")
         .eq("published", true)
         .order("sort_order", { ascending: true });
       return (data ?? []) as Testimonial[];

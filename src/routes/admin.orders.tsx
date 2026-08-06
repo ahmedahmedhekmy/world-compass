@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { formatUSD } from "@/config/site";
 import { Button } from "@/components/ui/button";
+import { downloadCsv } from "@/lib/export-csv";
 
 export const Route = createFileRoute("/admin/orders")({
   component: AdminOrders,
@@ -40,7 +41,17 @@ function AdminOrders() {
 
   return (
     <>
-      <h1 className="text-2xl font-extrabold">الطلبات</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-2xl font-extrabold">الطلبات</h1>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={(orders ?? []).length === 0}
+          onClick={() => downloadCsv("orders", orders ?? [])}
+        >
+          تصدير CSV
+        </Button>
+      </div>
       <div className="mt-6 overflow-x-auto rounded-3xl border border-border">
         <table className="w-full text-right text-sm">
           <thead className="bg-secondary">

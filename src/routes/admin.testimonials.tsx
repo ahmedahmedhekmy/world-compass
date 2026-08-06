@@ -120,11 +120,6 @@ function AdminTestimonials() {
                 <h3 className="font-bold">
                   {t.name}
                   {t.country ? ` · ${t.country}` : ""}
-                  {t.is_demo && (
-                    <span className="ms-2 rounded-full bg-secondary px-2 py-0.5 text-[10px] font-normal text-muted-foreground">
-                      نموذج توضيحي
-                    </span>
-                  )}
                 </h3>
                 <p className="mt-1 text-xs text-muted-foreground">التقييم: {t.rating}/5</p>
               </div>
