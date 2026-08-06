@@ -56,11 +56,9 @@ const orderSchema = z.object({
 export const submitContactMessage = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => contactSchema.parse(d))
   .handler(async ({ data }) => {
-    console.log('[Leads] submitContactMessage called with:', data);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { sendAdminEmail } = await import("./notify.server");
     const { error } = await supabaseAdmin.from("messages").insert(data);
-    console.log('[Leads] messages insert result:', error ? { error: error.message, details: error.details, hint: error.hint } : 'success');
     if (error) {
       console.error('[Leads] Failed to insert message:', error);
       throw new Error("تعذّر إرسال الرسالة، حاول مرة أخرى.");
@@ -72,7 +70,6 @@ export const submitContactMessage = createServerFn({ method: "POST" })
 export const submitTripRequest = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => tripSchema.parse(d))
   .handler(async ({ data }) => {
-    console.log('[Leads] submitTripRequest called with:', data);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { sendAdminEmail, sendCustomerEmail } = await import("./notify.server");
     const { data: row, error } = await supabaseAdmin
@@ -80,7 +77,6 @@ export const submitTripRequest = createServerFn({ method: "POST" })
       .insert(data as never)
       .select("id")
       .single();
-    console.log('[Leads] trip_requests insert result:', error ? { error: error.message, details: error.details, hint: error.hint } : 'success');
     if (error) {
       console.error('[Leads] Failed to insert trip request:', error);
       throw new Error("تعذّر إرسال الطلب، حاول مرة أخرى.");
@@ -100,11 +96,9 @@ export const submitTripRequest = createServerFn({ method: "POST" })
 export const submitBookingRequest = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => bookingSchema.parse(d))
   .handler(async ({ data }) => {
-    console.log('[Leads] submitBookingRequest called with:', data);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { sendAdminEmail, sendCustomerEmail } = await import("./notify.server");
     const { error } = await supabaseAdmin.from("booking_requests").insert(data as never);
-    console.log('[Leads] booking_requests insert result:', error ? { error: error.message, details: error.details, hint: error.hint } : 'success');
     if (error) {
       console.error('[Leads] Failed to insert booking request:', error);
       throw new Error("تعذّر إرسال طلب الحجز، حاول مرة أخرى.");
@@ -122,7 +116,6 @@ export const submitBookingRequest = createServerFn({ method: "POST" })
 export const createOrder = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => orderSchema.parse(d))
   .handler(async ({ data }) => {
-    console.log('[Leads] createOrder called with:', data);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { sendAdminEmail, sendCustomerEmail } = await import("./notify.server");
 
@@ -169,7 +162,6 @@ export const createOrder = createServerFn({ method: "POST" })
       userId = null;
     }
 
-    console.log('[Leads] Creating order with reference:', reference);
     const { error } = await supabaseAdmin.from("orders").insert({
       reference,
       user_id: userId,
@@ -184,7 +176,6 @@ export const createOrder = createServerFn({ method: "POST" })
       paid_at: null,
       currency: "USD",
     });
-    console.log('[Leads] orders insert result:', error ? { error: error.message, details: error.details, hint: error.hint } : 'success');
     if (error) {
       console.error('[Leads] Failed to create order:', error);
       throw new Error("تعذّر إنشاء الطلب، حاول مرة أخرى.");
