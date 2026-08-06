@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button";
 import { formatUSD } from "@/config/site";
 import { countryBySlug } from "@/data/countries";
 import { useFavorites, readRecentCountries } from "@/lib/favorites";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 
 export const Route = createFileRoute("/account")({
@@ -68,6 +71,8 @@ function AccountPage() {
           </Button>
         </div>
       </div>
+
+      <ProfileEditor userId={user.id} />
 
       <h2 className="mt-10 text-lg font-bold">أدلتي</h2>
       {paidGuides.length === 0 ? (
