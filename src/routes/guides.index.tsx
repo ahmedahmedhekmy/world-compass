@@ -7,6 +7,7 @@ import { site, formatUSD } from "@/config/site";
 
 export const Route = createFileRoute("/guides/")({
   head: () => ({
+    links: [{ rel: "canonical", href: "/guides" }],
     meta: [
       { title: "أدلة السفر | دليل كامل لكل دولة — Travel Smart Budget" },
       {

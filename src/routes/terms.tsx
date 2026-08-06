@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/terms")({
   head: () => ({
+    links: [{ rel: "canonical", href: "/terms" }],
     meta: [
       { title: "شروط الخدمة | Travel Smart Budget" },
       {

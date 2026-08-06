@@ -13,6 +13,7 @@ import { site } from "@/config/site";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
+    links: [{ rel: "canonical", href: "/contact" }],
     meta: [
       { title: "تواصل معنا | Travel Smart Budget" },
       {

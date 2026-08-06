@@ -3,6 +3,7 @@ import { site } from "@/config/site";
 
 export const Route = createFileRoute("/privacy")({
   head: () => ({
+    links: [{ rel: "canonical", href: "/privacy" }],
     meta: [
       { title: "سياسة الخصوصية | Travel Smart Budget" },
       {

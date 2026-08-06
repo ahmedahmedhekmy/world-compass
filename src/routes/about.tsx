@@ -3,6 +3,7 @@ import { site } from "@/config/site";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
+    links: [{ rel: "canonical", href: "/about" }],
     meta: [
       { title: "من نحن | Travel Smart Budget" },
       {

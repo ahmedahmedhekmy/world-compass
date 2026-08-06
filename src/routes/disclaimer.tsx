@@ -3,6 +3,7 @@ import { DISCLAIMER_MAIN, DISCLAIMER_RANGE, INSURANCE_NOTE } from "@/lib/estimat
 
 export const Route = createFileRoute("/disclaimer")({
   head: () => ({
+    links: [{ rel: "canonical", href: "/disclaimer" }],
     meta: [
       { title: "إخلاء مسؤولية السفر | Travel Smart Budget" },
       {

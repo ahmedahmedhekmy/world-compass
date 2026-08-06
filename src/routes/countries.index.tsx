@@ -8,6 +8,7 @@ import { continents, countries } from "@/data/countries";
 
 export const Route = createFileRoute("/countries/")({
   head: () => ({
+    links: [{ rel: "canonical", href: "/countries" }],
     meta: [
       { title: "دليل الدول | Travel Smart Budget" },
       {
